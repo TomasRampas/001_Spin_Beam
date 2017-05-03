@@ -2,6 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+// TO DO:
+/* 1. Coroutine 
+ * 2. Effect of randomly selected actions
+ * 3. Tag comparsion to identify fail states
+ * 
+ */
+
+
+
 public class ArrayTest : MonoBehaviour {
 
     public List<GameObject> listActive = new List<GameObject>();
@@ -14,6 +23,7 @@ public class ArrayTest : MonoBehaviour {
 
     private MainframeController mainframeController;
     private GameObject randomSelectionFromLists;
+    private MainframeActionSelection mainframeActionSelection;
     private bool GameStarted;
     private bool gameEnded;
 
@@ -21,6 +31,7 @@ public class ArrayTest : MonoBehaviour {
 
         GameObject MainframeController = GameObject.FindWithTag("MainframeController");
         mainframeController = MainframeController.GetComponent<MainframeController>();
+        mainframeActionSelection = MainframeController.GetComponent<MainframeActionSelection>();
 
     }
 
@@ -37,6 +48,12 @@ public class ArrayTest : MonoBehaviour {
         }
 
         #region TEST INPUT
+
+        if (Input.GetKeyDown(KeyCode.O))
+        {
+            PlayerPrefabRandomSelection();
+            Debug.Log("O pressed");
+        }
 
         /*if (Input.GetKeyDown(KeyCode.Keypad2))
         {
@@ -71,11 +88,10 @@ public class ArrayTest : MonoBehaviour {
 
     #region COROUTINE
 
-                                                                        /// CONTINUE ///
     IEnumerator RunningGame()
     {
-        // Runtime of the game
-        // Mainframe movement in PositionOperator.cs
+        // Runtime of the game ADD CODE-----------------------------------------------
+        // Mainframe movement in PositionOperator.cs ADD CODE-----------------------------------------------
         yield return null;
     }
 
@@ -102,7 +118,7 @@ public class ArrayTest : MonoBehaviour {
         mainframeController.ResetRotation();
         MainframeListClean();
         ActivateSignalSendThroughPlayerPrefabs();
-        // Random spawn of beams / remove / add
+        mainframeActionSelection.SetRandomAction(); // TO DO: the action is selected but does not do anything to the mainframe
         mainframeController.RandomSelection();
     } 
 

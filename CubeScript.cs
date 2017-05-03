@@ -54,11 +54,9 @@ public class CubeScript : MonoBehaviour {
         ActivePlayerPrefab = false;
     }
 
-   
-    /*
-    void OnMouseDown()
+    // TO DO: set rules for each type of collision + send acording impulses to lists
+    void OnTriggerEnter(Collider other)
     {
-        Debug.Log("<Color=Red><b>MouseClick</b></color>");
-        RemoveContact();
-    }*/
+
+    }
 }

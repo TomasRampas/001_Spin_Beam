@@ -5,38 +5,47 @@ using Dreamteck.Splines;
 
 public class PositionOperator : MonoBehaviour {
 
+    public GameObject mainframe;
+
     SplineFollower follower;
+    MainframeActionSelection mainframeActionSelection;
     
 	void Start () {
+        mainframeActionSelection = mainframe.GetComponent<MainframeActionSelection>();
         follower = GetComponent<SplineFollower>();
-		
 	}
 	
 	void Update () {
-        // Testing feature
-		if (Input.GetKeyDown(KeyCode.Keypad4))
+
+        #region TEST INPUT
+        if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             StartMovement();
         }
-	}
-
-    public void StartMovement()
-    {
-        follower.autoFollow = true;
+        #endregion
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("End"))
         {
-            Debug.Log("Round Finished");
-            Invoke ("WaitForPause", 0.25f);
-            
+            mainframeActionSelection.starterPhase -= 1;
+            mainframeActionSelection.numberOfLoops += 1;
+            StopMovement();
         }
     }
 
-    void WaitForPause()
+    #region MAINFRAME BODY MOVEMENT
+
+    public void StartMovement()
+    {
+        follower.autoFollow = true;
+    }
+
+    void StopMovement()
     {
         follower.autoFollow = false;
     }
+
+    # endregion
 }
