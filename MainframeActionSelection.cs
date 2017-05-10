@@ -2,17 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
 public class MainframeActionSelection : MonoBehaviour
 {
 
-    // Number of practice loops
+    // NOTE: Number of practice loops
     public int starterPhase = 2;
-    // Number of loops
+    // NOTE: Number of loops player survived
     public int numberOfLoops = 0;
 
     delegate void ActionMethods();
-    List<ActionMethods> actionMethods = new List<ActionMethods>();
     int randomAction = 0;
     ArrayTest arrayTest;
 
@@ -20,34 +18,21 @@ public class MainframeActionSelection : MonoBehaviour
     {
         GameObject gameController = GameObject.FindWithTag("GameController");
         arrayTest = gameController.GetComponent<ArrayTest>();
-        CreateList();
     }
 
     void Update() {
 
         #region TEST INPUT
-        if (Input.GetKeyDown(KeyCode.P))
+        /*if (Input.GetKeyDown(KeyCode.P))
         {
             Debug.Log("P pressed");
             SetRandomAction();
-        }
+        }*/
         #endregion
 
     }
 
-    #region ASSIGNING ACTION METHODS TO LIST
-
-    public void CreateList()
-    {
-        actionMethods.Add(RemoveBeamAction);
-        actionMethods.Add(AddBeamAction);
-        actionMethods.Add(RandomBeamAction);
-    }
-
-    #endregion
-
     #region SELECTION OF ACTION - MAIN FEATURE
-
     public void SetRandomAction()
     {
         if (starterPhase <= 0)
@@ -55,15 +40,12 @@ public class MainframeActionSelection : MonoBehaviour
             int currentListSize = 0;
             int selectedAction = 0;
             currentListSize = arrayTest.listActive.Count;
-            Debug.Log("currentListSize" + currentListSize);
             selectedAction = ActionCombinations(currentListSize);
-            Debug.Log("selectedAction" + selectedAction);
-            actionMethods[selectedAction]();
+            SpecificActionCall(selectedAction);
         } else {
             // NOTE: First two rounds, player does not get any add or remove beams in mainframe
-            actionMethods[2]();
+            SpecificActionCall(2);
         }
-
     }
 
     int ActionCombinations(int listSize)
@@ -86,32 +68,28 @@ public class MainframeActionSelection : MonoBehaviour
                 randomAction = 0;
                 break;
         }
-
         return randomAction;
     }
-    #endregion
 
-    // ADD CODE-----------------------------------------------
-    #region MAINFRAME ACTIONS
-    // NOTE: 0 action
-    void RemoveBeamAction()
+    void SpecificActionCall(int selectedAction)
     {
-        // ADD CODE-----------------------------------------------
-        Debug.Log("Called RemoveBeamAction");
-    }
-
-    // NOTE: 1 action
-    void AddBeamAction()
-    {
-        // ADD CODE-----------------------------------------------
-        Debug.Log("Called AddBeamAction");
-    }
-
-    // NOTE: 2 action
-    void RandomBeamAction()
-    {
-        // ADD CODE-----------------------------------------------
-        Debug.Log("Called RandomBeamAction");
+        switch (selectedAction)
+        {
+            case 0:
+                Debug.Log("<color=red><b>Remove Action</b></color>");
+                arrayTest.RemoveRandomSelectionFromMainframeActive(); 
+                break;
+            case 1:
+                Debug.Log("<color=green><b>Add Action</b></color>");
+                arrayTest.AddRandomSelectionFromManiframeDisabled();
+                break;
+            case 2:
+                Debug.Log("<color=white><b>Random Beam</b></color>");
+                arrayTest.RandomMainframeBeamSelection();
+                break;
+            default:
+                break;
+        }
     }
     #endregion
 }

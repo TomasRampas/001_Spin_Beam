@@ -20,4 +20,5 @@ public class Score : MonoBehaviour {
         score = mainframeActionSelection.numberOfLoops;
         scoreNumber.text = "" + score;
     }
+
 }

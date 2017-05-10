@@ -2,29 +2,29 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-// TO DO:
-/* 1. Coroutine 
- * 2. Effect of randomly selected actions
- * 3. Tag comparsion to identify fail states
- * 
- */
-
-
-
 public class ArrayTest : MonoBehaviour {
 
+    public float startWait;
+    public float waveWait;
     public List<GameObject> listActive = new List<GameObject>();
     public List<GameObject> listDisabled = new List<GameObject>();
     public List<GameObject> mainframeListActive = new List<GameObject>();
     public List<GameObject> mainframeListDisabled = new List<GameObject>();
     public List<GameObject> allPlayerPrefabs = new List<GameObject>();
-    public int activeNumber;
-    public int disabledNumber;
+    public List<GameObject> AllMainframePrefabs = new List<GameObject>();
+    public GameObject mainframeBody;
+    public GameObject end;
+    public GameObject gameOverText;
+
 
     private MainframeController mainframeController;
-    private GameObject randomSelectionFromLists;
     private MainframeActionSelection mainframeActionSelection;
+    private PositionOperator positionOperator;
+    private MaterialChanger materialChanger;
+    private GameObject ExtraActionSelection;
+
     private bool GameStarted;
+    private bool gameRunning;
     private bool gameEnded;
 
     void Start() {
@@ -32,28 +32,24 @@ public class ArrayTest : MonoBehaviour {
         GameObject MainframeController = GameObject.FindWithTag("MainframeController");
         mainframeController = MainframeController.GetComponent<MainframeController>();
         mainframeActionSelection = MainframeController.GetComponent<MainframeActionSelection>();
-
+        positionOperator = mainframeBody.GetComponent<PositionOperator>();
+        materialChanger = GetComponent<MaterialChanger>();
     }
 
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.Keypad5))
         {
             RunTheGame();
         }
 
-        if (!gameEnded)
-        {
-            StopCoroutine(RunningGame());
-        }
-
         #region TEST INPUT
 
-        if (Input.GetKeyDown(KeyCode.O))
+        /*if (Input.GetKeyDown(KeyCode.O))
         {
             PlayerPrefabRandomSelection();
             Debug.Log("O pressed");
-        }
+        }*/
 
         /*if (Input.GetKeyDown(KeyCode.Keypad2))
         {
@@ -83,60 +79,139 @@ public class ArrayTest : MonoBehaviour {
         {
             mainframeController.ResetRotation();
         }*/
-#endregion
+        #endregion
+
+        #region TEST INPUT2
+        if (Input.GetKeyDown(KeyCode.Q)) // Checked
+        {
+            AssignInDisableList();
+            Debug.Log("<color=green><b> Action 1 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.W)) // Checked
+        {
+            PlayerPrefabRandomSelection();
+            Debug.Log("<color=red><b> Action 2 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.E)) // Checked
+        {
+            listActiveEnable();
+            Debug.Log("<color=green><b> Action 3 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.R)) // Checked
+        {
+            listDisabledDisable();
+            Debug.Log("<color=red><b> Action 4 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.T)) // Checked
+        {
+            mainframeController.ResetRotation();
+            Debug.Log("<color=green><b> Action 5 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.Y)) // Checked
+        {
+            MainframeListClean();
+            Debug.Log("<color=red><b> Action 6 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.U)) // Checked 
+        {
+            ActivateSignalSendThroughPlayerPrefabs();
+            Debug.Log("<color=green><b> Action 7 </b></color>");
+        }
+
+        if (Input.GetKeyDown(KeyCode.A)) // Checked 
+        {
+            MainframeListActiveActivation();
+            Debug.Log("<color=red><b> Action 8_1 </b></color>");
+        }
+
+        if (Input.GetKeyDown(KeyCode.S)) // Checked 
+        {
+            MainframeListDeactivation();
+            Debug.Log("<color=red><b> Action 8_2 </b></color>");
+        }
+
+        if (Input.GetKeyDown(KeyCode.I)) // PROBLEM: Remove action called!!!
+        {
+           mainframeActionSelection.SetRandomAction();
+            Debug.Log("<color=red><b> Action 8_3 </b></color>");
+        }
+
+        if (Input.GetKeyDown(KeyCode.O)) // Checked
+        {
+            mainframeController.RandomSelection();
+            Debug.Log("<color=green><b> Action 9 </b></color>");
+        }
+        if (Input.GetKeyDown(KeyCode.P)) // Checked
+        {
+            positionOperator.StartMovement();
+            Debug.Log("<color=red><b> Action 10 </b></color>");
+        }
+        # endregion
     }
-
-    #region COROUTINE
-
-    IEnumerator RunningGame()
-    {
-        // Runtime of the game ADD CODE-----------------------------------------------
-        // Mainframe movement in PositionOperator.cs ADD CODE-----------------------------------------------
-        yield return null;
-    }
-
-    #endregion
 
     #region MAIN METHODS 
 
     void RunTheGame()
     {
         GameStarted = true;
-        StartCoroutine(RunningGame());
-    }
+        gameRunning = true;
 
-    void FirstTimePlayerSetup()
-    {
+        // NOTE: First time player setup
         AssignInDisableList();
         PlayerPrefabRandomSelection();
         listActiveEnable();
         listDisabledDisable();
+
+        // NOTE: Mainframe setup
+        mainframeController.ResetRotation();
+        MainframeListClean();
+        ActivateSignalSendThroughPlayerPrefabs();
+        MainframeListActiveActivation();
+        MainframeListDeactivation();
+        mainframeActionSelection.SetRandomAction();
+        mainframeController.RandomSelection();
+
+        // NOTE: Start mainframe movement
+        positionOperator.StartMovement();
     }
 
-    void UpdateOfMainframe()
+    // NOTE: End of round is called on trigger enter in PositionOperator.cs 31
+    public void EndOfRound()
     {
         mainframeController.ResetRotation();
         MainframeListClean();
         ActivateSignalSendThroughPlayerPrefabs();
-        mainframeActionSelection.SetRandomAction(); // TO DO: the action is selected but does not do anything to the mainframe
+        MainframeListActiveActivation();
+        MainframeListDeactivation();
+        mainframeActionSelection.SetRandomAction();
         mainframeController.RandomSelection();
+        if (!gameEnded)
+        {
+            positionOperator.StartMovement();
+        }
     } 
 
+    public void GameOver()
+    {
+        gameEnded = true;
+        gameOverText.SetActive(true);
+    }
     #endregion
 
-    # region PLAYER PREFABS
-    // PLAYER prefabs
-
+    #region PLAYER PREFABS
     void AssignInDisableList()
     {
-        disabledNumber = 4;
-        for (int i = 0; i < disabledNumber; i++)
+        for (int i = 0; i < listDisabled.Count; i++)
         {
             GameObject selected;
             CubeScript cubeScript;
+            Component[] meshRenderer;
             selected = listDisabled[i];
-            MeshRenderer m = selected.GetComponent<MeshRenderer>();
-            m.enabled = false;
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = false;
+            }
             cubeScript = selected.GetComponent<CubeScript>();
             cubeScript.SetAsDisabled();
 
@@ -150,23 +225,24 @@ public class ArrayTest : MonoBehaviour {
         {
             int randomSelection = Random.Range(0, listDisabled.Count);
             listActive.Add(listDisabled[randomSelection]);
-            activeNumber += 1;
-            disabledNumber -= 1;
             listDisabled.Remove(listDisabled[randomSelection]);
-            listActiveEnable();
         }
 
     }
 
     void listActiveEnable()
     {
-        for (int i = 0; i < activeNumber; i++)
+        for (int i = 0; i < listActive.Count; i++)
         {
             GameObject selected;
             CubeScript cubeScript;
+            Component[] meshRenderer;
             selected = listActive[i];
-            MeshRenderer m = selected.GetComponent<MeshRenderer>();
-            m.enabled = true;
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = true;
+            }
             cubeScript = selected.GetComponent<CubeScript>();
             cubeScript.SetAsActive();
             TagAssignment(selected, 1);
@@ -175,13 +251,17 @@ public class ArrayTest : MonoBehaviour {
 
     void listDisabledDisable()
     {
-        for (int i = 0; i < disabledNumber; i++)
+        for (int i = 0; i < listDisabled.Count; i++)
         {
             GameObject selected;
             CubeScript cubeScript;
+            Component[] meshRenderer;
             selected = listDisabled[i];
-            MeshRenderer m = selected.GetComponent<MeshRenderer>();
-            m.enabled = false;
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = false;
+            }
             cubeScript = selected.GetComponent<CubeScript>();
             cubeScript.SetAsDisabled();
             TagAssignment(selected, 2);
@@ -203,67 +283,57 @@ public class ArrayTest : MonoBehaviour {
     #endregion
 
     #region OUTSIDE INPUT
-    // OUTSIDE Input
-
     public void PlayerBeamRemoveContact(GameObject selected)
     {
-        Debug.Log("Player beam has been hit by remove action");
         int cubeIndex;
         cubeIndex = listActive.IndexOf(selected);
         listDisabled.Add(selected);
-        disabledNumber += 1;
-        activeNumber -= 1;
         listActive.RemoveAt(cubeIndex);
         listDisabledDisable();
-        TagAssignment(selected, 2);
+        listActiveEnable();
     }
 
     public void PlayerBeamAddContact(GameObject selected)
     {
-        Debug.Log("Player beam was added by add action");
         int cubeIndex;
         cubeIndex = listDisabled.IndexOf(selected);
         listActive.Add(selected);
-        disabledNumber -= 1;
-        activeNumber += 1;
         listDisabled.RemoveAt(cubeIndex);
         listDisabledDisable();
-        TagAssignment(selected, 2);
+        listActiveEnable();
     }
     #endregion
 
     # region MAINFRAME PREFABS
-    // MAINFRAME prefabs
 
     public void AddToMainframeListActive(GameObject selected)
     {
-        Debug.Log("Mainframe block added to active list");
         mainframeListActive.Add(selected);
     }
 
     public void AddToMainframeListDisabled(GameObject selected)
     {
-        Debug.Log("Mainframe block added to disabled list");
         mainframeListDisabled.Add(selected);
     }
 
     public void MainframeListActiveActivation()
     {
-        Debug.Log("Activation of mainframe prefabs");
         for (int i = 0; i < mainframeListActive.Count; i++)
         {
             GameObject selected;
             selected = mainframeListActive[i];
-            MeshRenderer mesh;
-            mesh = selected.GetComponent<MeshRenderer>();
-            mesh.enabled = true;
+            Component[] meshRenderer;
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = true;
+            }
             TagAssignment(selected, 1);
         }
     }
 
     public void MainframeListDeactivation()
     {
-        Debug.Log("Deactivatio of mainrame prefabs");
         for (int i = 0; i < mainframeListDisabled.Count; i++)
         {
             GameObject selected;
@@ -274,26 +344,80 @@ public class ArrayTest : MonoBehaviour {
 
     public void MainframeListClean()
     {
-        Debug.Log("Cleaning of mainframe lists");
-        for (int i = 0; i < mainframeListActive.Count; i++)
+        // NOTE: Reset of Mainframe GameObjects to their default state (tag, material)
+        for (int i = 0; i < AllMainframePrefabs.Count; i++)
         {
             GameObject mainframeBeam;
-            mainframeBeam = mainframeListActive[i];
-            MeshRenderer mesh;
-            mesh = mainframeBeam.GetComponent<MeshRenderer>();
-            mesh.enabled = false;
+            mainframeBeam = AllMainframePrefabs[i];
+            Component[] meshRenderer;
+            meshRenderer = mainframeBeam.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = false;
+            }
+            materialChanger.SetToDefaultMaterial(mainframeBeam); 
             TagAssignment(mainframeBeam, 2);
         }
+
+        // NOTE: Cleaning of Mainframe lists for new assignment
         mainframeListDisabled.Clear();
         mainframeListActive.Clear();
     }
-
     #endregion
 
-    # region REUSABLE METHODS
-    /// REUSABLE METHODS
+    #region MAINFRAME RANDOM ACTIONS
+    public GameObject RandomMainframeBeamSelection()
+    {
+        int randomSelection;
+        Component[] meshRenderer;
+        randomSelection = Random.Range(0, mainframeListDisabled.Count);
+        ExtraActionSelection = mainframeListDisabled[randomSelection];
+        TagAssignment(ExtraActionSelection, 1);
+        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderer)
+        {
+            mesh.enabled = true;
+        }
+        materialChanger.SetToDefaultMaterial(ExtraActionSelection);
+        return ExtraActionSelection;
+    }
 
-    // Random selection from a list - returns selected object
+    public GameObject RemoveRandomSelectionFromMainframeActive()
+    {
+        int randomSelection;
+        Component[] meshRenderer;
+        randomSelection = Random.Range (0, mainframeListActive.Count);
+        ExtraActionSelection = mainframeListActive[randomSelection];
+        TagAssignment(ExtraActionSelection, 4);
+        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderer)
+        {
+            mesh.enabled = true;
+        }
+        materialChanger.SetToRemoveMaterial(ExtraActionSelection);
+        return ExtraActionSelection;
+    }
+
+    public GameObject AddRandomSelectionFromManiframeDisabled()
+    {
+        int randomSelection;
+        Component[] meshRenderer;
+        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderer)
+        {
+            mesh.enabled = true;
+        }
+        randomSelection = Random.Range(0, mainframeListDisabled.Count);
+        ExtraActionSelection = mainframeListDisabled[randomSelection];
+        TagAssignment(ExtraActionSelection, 3);
+        materialChanger.SetToAddMaterial(ExtraActionSelection);
+        return ExtraActionSelection;
+    }
+    #endregion
+
+    #region REUSABLE METHODS
+
+    // NOTE: Random selection from a list - returns selected object
     GameObject RandomSelection(List<GameObject> listToUse)
     {
         GameObject selected;
@@ -304,37 +428,35 @@ public class ArrayTest : MonoBehaviour {
         return selected;
     }
 
-    // Switching the MeshRenderer
+    // NOTE: Switching the MeshRenderer
     public void DisableMeshRenderer(GameObject mainframePrefab)
     {
-        MeshRenderer meshR;
-        meshR = mainframePrefab.GetComponent<MeshRenderer>();
-        meshR.enabled = !meshR.enabled;
+        Component[] meshRenderer;
+        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in meshRenderer)
+        {
+            mesh.enabled = !mesh.enabled;
+        }
     }
 
-    // Tag assigner
+    // NOTE: Tag assigner
     public void TagAssignment(GameObject AssignTag, int beamTag)
     {
         switch (beamTag)
         {
             case 1:
-                print("object tag active");
                 AssignTag.tag = "Active";
                 break;
             case 2:
-                print("object tag NotActive");
                 AssignTag.tag = "NotActive";
                 break;
             case 3:
-                print("object tag Add");
                 AssignTag.tag = "Add";
                 break;
             case 4:
-                print("object tag Remove");
                 AssignTag.tag = "Remove";
                 break;
             default:
-                print("object tag No tag");
                 break;
         }
     }

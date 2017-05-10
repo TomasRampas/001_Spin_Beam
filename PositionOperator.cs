@@ -6,23 +6,26 @@ using Dreamteck.Splines;
 public class PositionOperator : MonoBehaviour {
 
     public GameObject mainframe;
+    public GameObject gameManager;
 
+    private ArrayTest arrayTest;
     SplineFollower follower;
     MainframeActionSelection mainframeActionSelection;
     
 	void Start () {
         mainframeActionSelection = mainframe.GetComponent<MainframeActionSelection>();
         follower = GetComponent<SplineFollower>();
+        arrayTest = gameManager.GetComponent<ArrayTest>();
 	}
 	
 	void Update () {
 
-        #region TEST INPUT
+        /*#region TEST INPUT
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             StartMovement();
         }
-        #endregion
+        #endregion*/
     }
 
     void OnTriggerEnter(Collider other)
@@ -32,6 +35,7 @@ public class PositionOperator : MonoBehaviour {
             mainframeActionSelection.starterPhase -= 1;
             mainframeActionSelection.numberOfLoops += 1;
             StopMovement();
+            arrayTest.EndOfRound();
         }
     }
 
@@ -42,7 +46,7 @@ public class PositionOperator : MonoBehaviour {
         follower.autoFollow = true;
     }
 
-    void StopMovement()
+    public void StopMovement()
     {
         follower.autoFollow = false;
     }
