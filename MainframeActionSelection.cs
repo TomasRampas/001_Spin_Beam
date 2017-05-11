@@ -40,6 +40,7 @@ public class MainframeActionSelection : MonoBehaviour
             int currentListSize = 0;
             int selectedAction = 0;
             currentListSize = arrayTest.listActive.Count;
+            Debug.Log("List active count" + currentListSize);
             selectedAction = ActionCombinations(currentListSize);
             SpecificActionCall(selectedAction);
         } else {
@@ -61,7 +62,7 @@ public class MainframeActionSelection : MonoBehaviour
                 randomAction = actionNumber3[Random.Range(0, actionNumber3.Length)];
                 break;
             case 4:
-                int[] actionNumber4 = new int[] { 0, 2 };
+                int[] actionNumber4 = new int[] { 0 };
                 randomAction = actionNumber4[Random.Range(0, actionNumber4.Length)];
                 break;
             default:

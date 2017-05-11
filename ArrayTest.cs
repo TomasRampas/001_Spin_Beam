@@ -82,6 +82,7 @@ public class ArrayTest : MonoBehaviour {
         #endregion
 
         #region TEST INPUT2
+        /*
         if (Input.GetKeyDown(KeyCode.Q)) // Checked
         {
             AssignInDisableList();
@@ -146,6 +147,7 @@ public class ArrayTest : MonoBehaviour {
             positionOperator.StartMovement();
             Debug.Log("<color=red><b> Action 10 </b></color>");
         }
+        */
         # endregion
     }
 
@@ -236,8 +238,8 @@ public class ArrayTest : MonoBehaviour {
         {
             GameObject selected;
             CubeScript cubeScript;
-            Component[] meshRenderer;
             selected = listActive[i];
+            Component[] meshRenderer;
             meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
             foreach (MeshRenderer mesh in meshRenderer)
             {
@@ -321,13 +323,10 @@ public class ArrayTest : MonoBehaviour {
         for (int i = 0; i < mainframeListActive.Count; i++)
         {
             GameObject selected;
+            MainframeScript mainframeScript;
             selected = mainframeListActive[i];
-            Component[] meshRenderer;
-            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer mesh in meshRenderer)
-            {
-                mesh.enabled = true;
-            }
+            mainframeScript = selected.GetComponent<MainframeScript>();
+            mainframeScript.activeMainframePrefab();
             TagAssignment(selected, 1);
         }
     }
@@ -337,7 +336,10 @@ public class ArrayTest : MonoBehaviour {
         for (int i = 0; i < mainframeListDisabled.Count; i++)
         {
             GameObject selected;
+            MainframeScript mainframeScript;
             selected = mainframeListDisabled[i];
+            mainframeScript = selected.GetComponent<MainframeScript>();
+            mainframeScript.deactivatedMainframePrefab();
             TagAssignment(selected, 2);
         }
     }
@@ -348,14 +350,10 @@ public class ArrayTest : MonoBehaviour {
         for (int i = 0; i < AllMainframePrefabs.Count; i++)
         {
             GameObject mainframeBeam;
+            MainframeScript mainframeScript;
             mainframeBeam = AllMainframePrefabs[i];
-            Component[] meshRenderer;
-            meshRenderer = mainframeBeam.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer mesh in meshRenderer)
-            {
-                mesh.enabled = false;
-            }
-            materialChanger.SetToDefaultMaterial(mainframeBeam); 
+            mainframeScript = mainframeBeam.GetComponent<MainframeScript>();
+            mainframeScript.resetMainframePrefab();
             TagAssignment(mainframeBeam, 2);
         }
 
@@ -369,48 +367,36 @@ public class ArrayTest : MonoBehaviour {
     public GameObject RandomMainframeBeamSelection()
     {
         int randomSelection;
-        Component[] meshRenderer;
+        MainframeScript mainframeScript;
         randomSelection = Random.Range(0, mainframeListDisabled.Count);
         ExtraActionSelection = mainframeListDisabled[randomSelection];
+        mainframeScript = ExtraActionSelection.GetComponent<MainframeScript>();
+        mainframeScript.activeMainframePrefab();
         TagAssignment(ExtraActionSelection, 1);
-        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer mesh in meshRenderer)
-        {
-            mesh.enabled = true;
-        }
-        materialChanger.SetToDefaultMaterial(ExtraActionSelection);
         return ExtraActionSelection;
     }
 
     public GameObject RemoveRandomSelectionFromMainframeActive()
     {
         int randomSelection;
-        Component[] meshRenderer;
+        MainframeScript mainframeScript;
         randomSelection = Random.Range (0, mainframeListActive.Count);
         ExtraActionSelection = mainframeListActive[randomSelection];
+        mainframeScript = ExtraActionSelection.GetComponent<MainframeScript>();
+        mainframeScript.removeMainframePrefab();
         TagAssignment(ExtraActionSelection, 4);
-        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer mesh in meshRenderer)
-        {
-            mesh.enabled = true;
-        }
-        materialChanger.SetToRemoveMaterial(ExtraActionSelection);
         return ExtraActionSelection;
     }
 
     public GameObject AddRandomSelectionFromManiframeDisabled()
     {
         int randomSelection;
-        Component[] meshRenderer;
-        meshRenderer = ExtraActionSelection.GetComponentsInChildren<MeshRenderer>();
-        foreach (MeshRenderer mesh in meshRenderer)
-        {
-            mesh.enabled = true;
-        }
+        MainframeScript mainframeScript;
         randomSelection = Random.Range(0, mainframeListDisabled.Count);
         ExtraActionSelection = mainframeListDisabled[randomSelection];
+        mainframeScript = ExtraActionSelection.GetComponent<MainframeScript>();
+        mainframeScript.addMainframePrefab();
         TagAssignment(ExtraActionSelection, 3);
-        materialChanger.SetToAddMaterial(ExtraActionSelection);
         return ExtraActionSelection;
     }
     #endregion

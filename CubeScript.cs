@@ -87,6 +87,10 @@ public class CubeScript : MonoBehaviour {
                 // success, change state of this prefab (deactivate), new round coming
                 SetAsDisabled();
                 RemoveContact();
+                MainframeScript mainScript;
+                mainScript = other.GetComponent<MainframeScript>();
+                mainScript.removeContact();
+                
             }
             else
             {
@@ -100,6 +104,9 @@ public class CubeScript : MonoBehaviour {
                 // success, change state of this prefab (activate), new round coming
                 SetAsActive();
                 AddContact();
+                MainframeScript mainScript;
+                mainScript = other.GetComponent<MainframeScript>();
+                mainScript.addContact();
             }
             else if (other.gameObject.CompareTag("NotActive"))
             {

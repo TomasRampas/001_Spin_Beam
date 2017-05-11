@@ -20,9 +20,6 @@ public class MaterialChanger : MonoBehaviour
 
     public void SetToDefaultMaterial(GameObject beam)
     {
-        // IF ALL WORKS DELETE //  RendererMaterial = beam.GetComponent<Renderer>();
-        // IF ALL WORKS DELETE //  RendererMaterial.material = MaterialList[0];
-
         Component[] renderMaterial;
         renderMaterial = beam.GetComponentsInChildren<Renderer>();
         foreach (Renderer material in renderMaterial)
@@ -33,9 +30,6 @@ public class MaterialChanger : MonoBehaviour
 
     public void SetToAddMaterial(GameObject beam)
     {
-        // IF ALL WORKS DELETE //  RendererMaterial = beam.GetComponent<Renderer>();
-        // IF ALL WORKS DELETE //  RendererMaterial.material = MaterialList[1];
-
         Component[] renderMaterial;
         renderMaterial = beam.GetComponentsInChildren<Renderer>();
         foreach (Renderer material in renderMaterial)
@@ -46,9 +40,6 @@ public class MaterialChanger : MonoBehaviour
 
     public void SetToRemoveMaterial(GameObject beam)
     {
-        // IF ALL WORKS DELETE //  RendererMaterial = beam.GetComponent<Renderer>();
-        // IF ALL WORKS DELETE //  RendererMaterial.material = MaterialList[2];
-
         Component[] renderMaterial;
         renderMaterial = beam.GetComponentsInChildren<Renderer>();
         foreach (Renderer material in renderMaterial)
@@ -56,4 +47,52 @@ public class MaterialChanger : MonoBehaviour
             material.material = MaterialList[2];
         }
     }
+
+    /*
+    #region NEW MATERIAL ASSIGNMENT
+    public void emissiveMaterialStates(int selectedState)
+    {
+        GameObject objectMaterial = emissivePart;
+        Renderer render;
+        render = objectMaterial.GetComponent<Renderer>();
+        switch (selectedState)
+        {
+            case 1:
+                render.material = DefaultMaterial;
+                break;
+            case 2:
+                render.material = RemoveMaterial;
+                break;
+            case 3:
+                render.material = AddMaterial;
+                break;
+            default:
+                Debug.Log("ERROR: No material assigned");
+                break;
+        }
+    }
+
+    public void dummyMaterialStates(int selectedState)
+    {
+        GameObject objectMaterial = dummyObject;
+        Renderer render;
+        render = dummyObject.GetComponent<Renderer>();
+        switch (selectedState)
+        {
+            case 1:
+                render.material = DummyRemoveMaterial;
+                break;
+
+            case 2:
+                render.material = DummyAddMaterial;
+                break;
+            default:
+                Debug.Log("ERROR: No material assigned");
+                break;
+        }
+
+    }
+    #endregion
+    */
+
 }
