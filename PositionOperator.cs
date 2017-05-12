@@ -7,8 +7,10 @@ public class PositionOperator : MonoBehaviour {
 
     public GameObject mainframe;
     public GameObject gameManager;
+    public GameObject orb;
 
     private ArrayTest arrayTest;
+    private OrbScript orbScript;
     SplineFollower follower;
     MainframeActionSelection mainframeActionSelection;
     
@@ -16,6 +18,7 @@ public class PositionOperator : MonoBehaviour {
         mainframeActionSelection = mainframe.GetComponent<MainframeActionSelection>();
         follower = GetComponent<SplineFollower>();
         arrayTest = gameManager.GetComponent<ArrayTest>();
+        orbScript = orb.GetComponent<OrbScript>();
 	}
 	
 	void Update () {
@@ -36,6 +39,17 @@ public class PositionOperator : MonoBehaviour {
             mainframeActionSelection.numberOfLoops += 1;
             StopMovement();
             arrayTest.EndOfRound();
+        }
+
+        if (other.gameObject.CompareTag("OrbDespawn"))
+        {
+            orbScript.DespawnOrb();
+        }
+
+        if (other.gameObject.CompareTag("LaserCollider") && !arrayTest.gameEnded)
+        {
+                arrayTest.PlayLaserParticle();
+                orbScript.SpawnOrb();
         }
     }
 

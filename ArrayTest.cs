@@ -15,17 +15,18 @@ public class ArrayTest : MonoBehaviour {
     public GameObject mainframeBody;
     public GameObject end;
     public GameObject gameOverText;
-
+    public GameObject guiManagerObject;
 
     private MainframeController mainframeController;
     private MainframeActionSelection mainframeActionSelection;
     private PositionOperator positionOperator;
     private MaterialChanger materialChanger;
     private GameObject ExtraActionSelection;
+    private GUIManager guiManager;
 
     private bool GameStarted;
     private bool gameRunning;
-    private bool gameEnded;
+    public bool gameEnded;
 
     void Start() {
 
@@ -34,6 +35,7 @@ public class ArrayTest : MonoBehaviour {
         mainframeActionSelection = MainframeController.GetComponent<MainframeActionSelection>();
         positionOperator = mainframeBody.GetComponent<PositionOperator>();
         materialChanger = GetComponent<MaterialChanger>();
+        guiManager = guiManagerObject.GetComponent<GUIManager>();
     }
 
     void Update() {
@@ -153,7 +155,7 @@ public class ArrayTest : MonoBehaviour {
 
     #region MAIN METHODS 
 
-    void RunTheGame()
+    public void RunTheGame()
     {
         GameStarted = true;
         gameRunning = true;
@@ -197,7 +199,15 @@ public class ArrayTest : MonoBehaviour {
     {
         gameEnded = true;
         gameOverText.SetActive(true);
+        Invoke("CallGUIEndAnimation", 1f);
     }
+
+    // NOTE: Inovke on game over GUI animation
+    void CallGUIEndAnimation()
+    {
+        guiManager.FromGameToMenu();
+    }
+
     #endregion
 
     #region PLAYER PREFABS
@@ -304,6 +314,19 @@ public class ArrayTest : MonoBehaviour {
         listDisabledDisable();
         listActiveEnable();
     }
+
+    public void PlayLaserParticle()
+    {
+        for (int i = 0; i < listActive.Count; i++)
+        {
+            GameObject playerBeam;
+            CubeScript cubeParticleScript;
+            playerBeam = listActive[i];
+            cubeParticleScript = playerBeam.GetComponent<CubeScript>();
+            cubeParticleScript.playLaserParticle();
+        }
+    }
+
     #endregion
 
     # region MAINFRAME PREFABS

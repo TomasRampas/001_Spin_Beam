@@ -5,9 +5,11 @@ using UnityEngine;
 public class CubeScript : MonoBehaviour {
 
     public GameObject MainframeCube;
+    public GameObject LaserParticle;
 
     private ArrayTest arrayTest;
     private GameObject cube;
+    private OrbScript orbScript;
 
     private bool ActivePlayerPrefab;
     private MainframeScript mainframeScript;
@@ -20,6 +22,9 @@ public class CubeScript : MonoBehaviour {
         arrayTest = gameControllerObject.GetComponent<ArrayTest>();
         mainframeScript = MainframeCube.GetComponent<MainframeScript>();
 
+        // INFO: Make connection with orb script
+        GameObject orb = GameObject.FindWithTag("Orb");
+        orbScript = orb.GetComponent<OrbScript>();
 	}
 
     void Update()
@@ -125,4 +130,15 @@ public class CubeScript : MonoBehaviour {
         }
     }
     #endregion
+
+    #region PARTICLE
+
+    public void playLaserParticle()
+    {
+        LaserScript laserScript;
+        laserScript = LaserParticle.GetComponent<LaserScript>();
+        laserScript.PlayLaserParticle();
+    }
+
+    # endregion
 }

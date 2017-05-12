@@ -17,8 +17,13 @@ public class Score : MonoBehaviour {
     }
 	
 	void Update () {
-        score = mainframeActionSelection.numberOfLoops;
+        //score = mainframeActionSelection.numberOfLoops;
         scoreNumber.text = "" + score;
+    }
+
+    public void addPoint()
+    {
+        score += 1;
     }
 
 }

@@ -4,17 +4,15 @@ using UnityEngine;
 
 public class TrailParticle : MonoBehaviour {
 
-    public GameObject mainProjectile;
-    //public ParticleSystem mainParticleSystem;
-	
-	void Update () {
-        
-        if (Input.GetKeyUp(KeyCode.Space))
-        {
-            mainProjectile.SetActive(true);
-        }
+    public Transform particle;
 
-        //if (mainParticleSystem.IsAlive() == false)
-            //mainProjectile.SetActive(false);
+    void Start()
+    {
+        particle.GetComponent<ParticleSystem>();
+    }
+
+    void Update ()
+    {
+        
 	}
 }
