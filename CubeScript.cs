@@ -6,6 +6,8 @@ public class CubeScript : MonoBehaviour {
 
     public GameObject MainframeCube;
     public GameObject LaserParticle;
+    public GameObject PlayerBeamBodyEmissive;
+    public GameObject PlayerBeamBody;
 
     private ArrayTest arrayTest;
     private GameObject cube;
@@ -14,13 +16,24 @@ public class CubeScript : MonoBehaviour {
     private bool ActivePlayerPrefab;
     private MainframeScript mainframeScript;
 
-	void Start () {
-
+    void Awake()
+    {
         cube = gameObject;
 
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         arrayTest = gameControllerObject.GetComponent<ArrayTest>();
         mainframeScript = MainframeCube.GetComponent<MainframeScript>();
+    }
+
+    void Start () {
+
+        /*
+        cube = gameObject;
+
+        GameObject gameControllerObject = GameObject.FindWithTag("GameController");
+        arrayTest = gameControllerObject.GetComponent<ArrayTest>();
+        mainframeScript = MainframeCube.GetComponent<MainframeScript>();
+        */
 
         // INFO: Make connection with orb script
         GameObject orb = GameObject.FindWithTag("Orb");
@@ -38,6 +51,21 @@ public class CubeScript : MonoBehaviour {
         */
         #endregion
     }
+
+    #region RESET
+    public void resetThePlayerBeam()
+    {
+        SetAsDisabled();
+        MeshRenderer mesh;
+
+        GameObject[] parts = new GameObject[] { PlayerBeamBodyEmissive, PlayerBeamBody };
+        foreach (GameObject item in parts)
+        {
+            mesh = item.GetComponent<MeshRenderer>();
+            mesh.enabled = false;
+        }
+    }
+    #endregion
 
     #region SENDING SIGNAL TO MAINFRAME PREFABS
 

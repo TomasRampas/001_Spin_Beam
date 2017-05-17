@@ -7,24 +7,34 @@ using UnityEngine.Events;
 public class GUIManager : MonoBehaviour {
 
     public GameObject playButton;
+    public GameObject topScore;
     public GameObject MainframeBody;
     public Camera mainCamera;
     public GameObject gameManager;
+    public GameObject gameOver;
+    public GameObject inGameScoreText;
+    public GameObject TopScoreHolder;
+    public GameObject Ads;
 
     SplineFollower GUIMainframeBody;
     SplineFollower GUImainCamera;
+    TopScore topScoreScript;
 
+    AdManager adManager;
     private bool GUIMainframeBodyMovement;
     private bool GUImainCameraMovement;
-    private MeshRenderer meshRenderMainframe;
     private GUImainframeScript guiMainframeScript;
+    private Score score;
     ArrayTest arrayTest;
 
 	void Start () {
+        topScoreScript = TopScoreHolder.GetComponent<TopScore>();
         GUIMainframeBody = MainframeBody.GetComponent<SplineFollower>();
         GUImainCamera = mainCamera.GetComponent<SplineFollower>();
         arrayTest = gameManager.GetComponent<ArrayTest>();
-        meshRenderMainframe = MainframeBody.GetComponent<MeshRenderer>();
+        guiMainframeScript = MainframeBody.GetComponent<GUImainframeScript>();
+        score = gameManager.GetComponent<Score>();
+        adManager = Ads.GetComponent<AdManager>();
 	}
 	
 	void Update () {
@@ -42,65 +52,86 @@ public class GUIManager : MonoBehaviour {
         }
         */
         #endregion
-
     }
 
-    public void FromMenuToGame()
+    #region MENU ANIMATION SETUP
+    #region START OF THE GAME
+
+    // NOTE: Called by menu button
+    public void startButtonStart()
     {
-        HideMainPageGUI();
+        InMenuGUI(false);
         GUImainCamera.direction = Spline.Direction.Forward;
     }
 
-    public void FromGameToMenu()
+    // NOTE: Called by 
+    public void cameraTriggerStart()
     {
-        guiMainframeScript.EnableGUIMainframe();
-        GUIMainframeBody.direction = Spline.Direction.Forward;
+        GUIMainframeBody.direction = Spline.Direction.Backward;
     }
 
-    #region CONNECTED WITH TRIGGERS
-
-    public void TransitionFromGameToMenu()
+    public void mainframeTriggerStart()
     {
-        if (!GUImainCameraMovement)
-        {
-            GUImainCamera.direction = Spline.Direction.Backward;
-            GUImainCameraMovement = true;
-            GUIMainframeBodyMovement = false;
-        }
-        
+        GUIMainframeBody.direction = Spline.Direction.Backward;
     }
 
-    public void GUImainframeMoveOut()
-    {
-        if (!GUIMainframeBodyMovement)
-        {
-            GUIMainframeBody.direction = Spline.Direction.Backward;
-            GUIMainframeBodyMovement = true;
-            GUImainCameraMovement = false;
-            Invoke("CallStartOfTheGame", 2f);
-        }
-        
-    }
-
-    void CallStartOfTheGame()
+    public void mainframeReachedTrigger()
     {
         arrayTest.RunTheGame();
-    }
-
-    public void ShowMainPageGUI()
-    {
-        playButton.SetActive(true);
-    }
-
-    public void GUIMainframeInvisible()
-    {
+        InGameGUI(true);
         guiMainframeScript.DisableGUIMainframe();
     }
 
     #endregion
 
-    void HideMainPageGUI()
+    #region END OF THE GAME
+
+    public void gameOverCalledOver()
     {
-        playButton.SetActive(false);
+        Invoke("InvokedMainframeMovement", 0.7f);
     }
+
+    void InvokedMainframeMovement()
+    {
+        guiMainframeScript.EnableGUIMainframe();
+        GUIMainframeBody.direction = Spline.Direction.Forward;
+    }
+
+    public void mainframeTriggerOver()
+    {
+        GUImainCamera.direction = Spline.Direction.Backward;
+        InGameGUI(false);
+        topScoreScript.GameOverScoreCheck();
+        score.resetScore();
+        adManager.UpdateCounter();
+    }
+
+    // NOTE: The final trigger of game over state
+    public void cameraTriggerOver()
+    {
+        InMenuGUI(true);
+        arrayTest.GameReset();
+    }
+
+    #endregion
+
+    #endregion
+
+    #region GUI SCREENS
+
+    void InMenuGUI(bool state)
+    {
+        playButton.SetActive(state);
+        topScore.SetActive(state);
+    }
+
+    void InGameGUI(bool state)
+    {
+        inGameScoreText.SetActive(state);
+        if (!state)
+        {
+            gameOver.SetActive(state);
+        }
+    }
+    #endregion
 }

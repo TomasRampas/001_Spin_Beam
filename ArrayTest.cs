@@ -26,65 +26,71 @@ public class ArrayTest : MonoBehaviour {
 
     private bool GameStarted;
     private bool gameRunning;
-    public bool gameEnded;
+    public bool gameOver;
 
-    void Start() {
+    void Awake()
+    {
 
+    }
+
+    void Start()
+    {
         GameObject MainframeController = GameObject.FindWithTag("MainframeController");
         mainframeController = MainframeController.GetComponent<MainframeController>();
         mainframeActionSelection = MainframeController.GetComponent<MainframeActionSelection>();
         positionOperator = mainframeBody.GetComponent<PositionOperator>();
         materialChanger = GetComponent<MaterialChanger>();
         guiManager = guiManagerObject.GetComponent<GUIManager>();
+        PreparationOfTheFirstGame();
     }
 
     void Update() {
 
-        if (Input.GetKeyDown(KeyCode.Keypad5))
+		#region TEST INPUT
+
+		/*
+		     if (Input.GetKeyDown(KeyCode.Keypad5))
         {
             RunTheGame();
         }
-
-        #region TEST INPUT
-
-        /*if (Input.GetKeyDown(KeyCode.O))
+			if (Input.GetKeyDown(KeyCode.O))
         {
             PlayerPrefabRandomSelection();
             Debug.Log("O pressed");
         }*/
 
-        /*if (Input.GetKeyDown(KeyCode.Keypad2))
+		/*if (Input.GetKeyDown(KeyCode.Keypad2))
         {
             MainframeListActiveActivation();
             MainframeListDeactivation();
         }*/
 
-        /*if (Input.GetKeyDown(KeyCode.Keypad1))
+		/*if (Input.GetKeyDown(KeyCode.Keypad1))
         {
             MainframeListClean();
         }*/
 
 
-        /*if (Input.GetKeyDown(KeyCode.Keypad9))
+		/*if (Input.GetKeyDown(KeyCode.Keypad9))
         {
             randomSelectionFromLists = RandomSelection(mainframeListActive);
             Debug.Log(randomSelectionFromLists);
             DisableMeshRenderer(randomSelectionFromLists);
         }*/
 
-        /*if (Input.GetKeyDown(KeyCode.Keypad6))
+		/*if (Input.GetKeyDown(KeyCode.Keypad6))
         {
             mainframeController.RandomSelection();
         }*/
 
-        /*if (Input.GetKeyDown(KeyCode.Keypad5))
+		/*if (Input.GetKeyDown(KeyCode.Keypad5))
         {
             mainframeController.ResetRotation();
         }*/
-        #endregion
+		#endregion
 
-        #region TEST INPUT2
-        /*
+		#region TEST INPUT2
+		/*
         if (Input.GetKeyDown(KeyCode.Q)) // Checked
         {
             AssignInDisableList();
@@ -150,15 +156,13 @@ public class ArrayTest : MonoBehaviour {
             Debug.Log("<color=red><b> Action 10 </b></color>");
         }
         */
-        # endregion
-    }
+		#endregion
+	}
 
-    #region MAIN METHODS 
+	#region MAIN METHODS 
 
-    public void RunTheGame()
+	public void PreparationOfTheFirstGame()
     {
-        GameStarted = true;
-        gameRunning = true;
 
         // NOTE: First time player setup
         AssignInDisableList();
@@ -170,10 +174,22 @@ public class ArrayTest : MonoBehaviour {
         mainframeController.ResetRotation();
         MainframeListClean();
         ActivateSignalSendThroughPlayerPrefabs();
+        Debug.Log("ActivateSignalSendThroughPlayerPrefabs?");
         MainframeListActiveActivation();
+        Debug.Log("MainframeListActiveActivation");
         MainframeListDeactivation();
+        Debug.Log("MainframeListDeactivation");
         mainframeActionSelection.SetRandomAction();
+        Debug.Log("SetRandomAction?");
         mainframeController.RandomSelection();
+        Debug.Log("RandomSelection?");
+
+    }
+
+    public void RunTheGame()
+    {
+        GameStarted = true;
+        gameRunning = true;
 
         // NOTE: Start mainframe movement
         positionOperator.StartMovement();
@@ -189,7 +205,7 @@ public class ArrayTest : MonoBehaviour {
         MainframeListDeactivation();
         mainframeActionSelection.SetRandomAction();
         mainframeController.RandomSelection();
-        if (!gameEnded)
+        if (!gameOver)
         {
             positionOperator.StartMovement();
         }
@@ -197,17 +213,24 @@ public class ArrayTest : MonoBehaviour {
 
     public void GameOver()
     {
-        gameEnded = true;
+        gameOver = true;
         gameOverText.SetActive(true);
-        Invoke("CallGUIEndAnimation", 1f);
+        guiManager.gameOverCalledOver();
     }
 
-    // NOTE: Inovke on game over GUI animation
-    void CallGUIEndAnimation()
+    #endregion
+
+    #region GAME RESET
+
+    public void GameReset()
     {
-        guiManager.FromGameToMenu();
+        gameOverText.SetActive(false);
+        ResetOfPlayerLists();
+        MainframeListClean();
+        gameOver = false;
+        listDisabled = new List<GameObject>(allPlayerPrefabs);
+        PreparationOfTheFirstGame();
     }
-
     #endregion
 
     #region PLAYER PREFABS
@@ -235,7 +258,12 @@ public class ArrayTest : MonoBehaviour {
         int numberOfSelections = 2;
         for (int i = 0; i < numberOfSelections; i++)
         {
+            GameObject selected;
+            CubeScript prefabScript;
             int randomSelection = Random.Range(0, listDisabled.Count);
+            selected = listDisabled[randomSelection];
+            prefabScript = selected.GetComponent<CubeScript>();
+            prefabScript.SetAsActive();
             listActive.Add(listDisabled[randomSelection]);
             listDisabled.Remove(listDisabled[randomSelection]);
         }
@@ -290,6 +318,24 @@ public class ArrayTest : MonoBehaviour {
             cubeScript = selected.GetComponent<CubeScript>();
             cubeScript.SendSignalToMainframePrefabs();
         }
+    }
+
+    void ResetOfPlayerLists()
+    {
+        // NOTE: Reset of Player GameObjects to their default state (tag, material)
+        for (int i = 0; i < allPlayerPrefabs.Count; i++)
+        {
+            GameObject playerBeam;
+            CubeScript cubeScript;
+            playerBeam = allPlayerPrefabs[i];
+            cubeScript = playerBeam.GetComponent<CubeScript>();
+            cubeScript.resetThePlayerBeam();
+            TagAssignment(playerBeam, 2);
+        }
+
+        // NOTE: Cleaning of Mainframe lists for new assignment
+        listActive.Clear();
+        listDisabled.Clear();
     }
 
     #endregion

@@ -20,9 +20,14 @@ public class MainframeScript : MonoBehaviour {
     private GameObject gameManager;
     private ArrayTest arrayTest;
 
-    void Start() {
+    void Awake()
+    {
         gameManager = GameObject.FindWithTag("GameController");
         arrayTest = gameManager.GetComponent<ArrayTest>();
+    }
+
+    void Start() {
+
     }
 
     public void AddToEnabledArray()

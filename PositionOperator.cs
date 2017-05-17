@@ -46,7 +46,7 @@ public class PositionOperator : MonoBehaviour {
             orbScript.DespawnOrb();
         }
 
-        if (other.gameObject.CompareTag("LaserCollider") && !arrayTest.gameEnded)
+        if (other.gameObject.CompareTag("LaserCollider") && !arrayTest.gameOver)
         {
                 arrayTest.PlayLaserParticle();
                 orbScript.SpawnOrb();

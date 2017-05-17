@@ -9,7 +9,7 @@ public class Score : MonoBehaviour {
     public GameObject Mainframe;
 
     MainframeActionSelection mainframeActionSelection;
-    int score;
+    public int score = 0;
 
     void Awake()
     {
@@ -17,7 +17,6 @@ public class Score : MonoBehaviour {
     }
 	
 	void Update () {
-        //score = mainframeActionSelection.numberOfLoops;
         scoreNumber.text = "" + score;
     }
 
@@ -26,4 +25,8 @@ public class Score : MonoBehaviour {
         score += 1;
     }
 
+    public void resetScore()
+    {
+        score = 0;
+    }
 }

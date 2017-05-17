@@ -12,7 +12,7 @@ public class MainframeActionSelection : MonoBehaviour
 
     // NOTE: Number of loops with random beam added (by forcing remove or add, gameplay is more interesting)
     private int numberOfRandomBeam = 0;
-    private int forceAnActionCall = 2;
+    private int forceAnActionCall = 3;
 
     delegate void ActionMethods();
     int randomAction = 0;
@@ -36,25 +36,27 @@ public class MainframeActionSelection : MonoBehaviour
 
     }
 
-    #region SELECTION OF ACTION - MAIN FEATURE
+    #region ACTION SELECTION
     public void SetRandomAction()
     {
-        if (starterPhase <= 0)
+        if (starterPhase <= numberOfLoops)
         {
             int currentListSize = 0;
             int selectedAction = 0;
             currentListSize = arrayTest.listActive.Count;
-            Debug.Log("List active count" + currentListSize);
             selectedAction = ActionCombinations(currentListSize);
             SpecificActionCall(selectedAction);
+            Debug.Log("2starterPhase" + starterPhase);
         } else {
             // NOTE: First two rounds, player does not get any add or remove beams in mainframe
             SpecificActionCall(2);
+            Debug.Log("1starterPhase" + starterPhase);
         }
     }
 
     int ActionCombinations(int listSize)
     {
+        Debug.Log("listSize" + listSize);
         switch (listSize)
         {
             case 2:
