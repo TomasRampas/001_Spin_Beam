@@ -15,10 +15,13 @@ public class GUIManager : MonoBehaviour {
     public GameObject inGameScoreText;
     public GameObject TopScoreHolder;
     public GameObject Ads;
+    public GameObject MainMainframeBody;
 
     SplineFollower GUIMainframeBody;
     SplineFollower GUImainCamera;
     TopScore topScoreScript;
+    PositionOperator positionOperator;
+    TutorialScript tutorialScript;
 
     AdManager adManager;
     private bool GUIMainframeBodyMovement;
@@ -27,7 +30,8 @@ public class GUIManager : MonoBehaviour {
     private Score score;
     ArrayTest arrayTest;
 
-	void Start () {
+
+    void Start () {
         topScoreScript = TopScoreHolder.GetComponent<TopScore>();
         GUIMainframeBody = MainframeBody.GetComponent<SplineFollower>();
         GUImainCamera = mainCamera.GetComponent<SplineFollower>();
@@ -35,7 +39,9 @@ public class GUIManager : MonoBehaviour {
         guiMainframeScript = MainframeBody.GetComponent<GUImainframeScript>();
         score = gameManager.GetComponent<Score>();
         adManager = Ads.GetComponent<AdManager>();
-	}
+        positionOperator = MainMainframeBody.GetComponent<PositionOperator>();
+        tutorialScript = GetComponent<TutorialScript>();
+    }
 	
 	void Update () {
 
@@ -78,6 +84,7 @@ public class GUIManager : MonoBehaviour {
     public void mainframeReachedTrigger()
     {
         arrayTest.RunTheGame();
+        positionOperator.RestartSpeed();
         InGameGUI(true);
         guiMainframeScript.DisableGUIMainframe();
     }
@@ -133,5 +140,44 @@ public class GUIManager : MonoBehaviour {
             gameOver.SetActive(state);
         }
     }
+    #endregion
+
+    #region TUTORIAL
+
+    // TO DO: Do this part of tutorial as Switch, each switch explains specific thing (orb, spin etc.)
+    // Dont just write everything here, only call it here
+
+    #region ORB EXPLANATION
+    public void OrbSpawned()
+    {
+        if (!tutorialScript.TutEnabled)
+        {
+            return;
+        }
+        else
+        {
+            Invoke("InvokePlayTutorial", 2.5f);
+        }
+    }
+
+    void InvokePlayTutorial()
+    {
+        tutorialScript.PlayTutorial(1);
+    }
+
+    public void OrbPicked()
+    {
+        if (!tutorialScript.TutEnabled)
+        {
+            return;
+        }
+        else
+        {
+            tutorialScript.EndTutorial(1);
+            tutorialScript.EndTutorial(3);
+        }
+    }
+    #endregion
+
     #endregion
 }

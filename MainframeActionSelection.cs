@@ -6,13 +6,13 @@ public class MainframeActionSelection : MonoBehaviour
 {
 
     // NOTE: Number of practice loops
-    public int starterPhase = 1;
+    public int starterPhase;
     // NOTE: Number of loops player survived
-    public int numberOfLoops = 0;
+    public int numberOfLoops;
 
     // NOTE: Number of loops with random beam added (by forcing remove or add, gameplay is more interesting)
-    private int numberOfRandomBeam = 0;
-    private int forceAnActionCall = 3;
+    public int numberOfRandomBeam;
+    private int forceAnActionCall = 2;
 
     delegate void ActionMethods();
     int randomAction = 0;
@@ -46,17 +46,14 @@ public class MainframeActionSelection : MonoBehaviour
             currentListSize = arrayTest.listActive.Count;
             selectedAction = ActionCombinations(currentListSize);
             SpecificActionCall(selectedAction);
-            Debug.Log("2starterPhase" + starterPhase);
         } else {
             // NOTE: First two rounds, player does not get any add or remove beams in mainframe
             SpecificActionCall(2);
-            Debug.Log("1starterPhase" + starterPhase);
         }
     }
 
     int ActionCombinations(int listSize)
     {
-        Debug.Log("listSize" + listSize);
         switch (listSize)
         {
             case 2:
@@ -83,22 +80,22 @@ public class MainframeActionSelection : MonoBehaviour
         switch (selectedAction)
         {
             case 0:
-                Debug.Log("<color=red><b>Remove Action</b></color>");
+                //Debug.Log("<color=red><b>Remove Action</b></color>");
                 arrayTest.RemoveRandomSelectionFromMainframeActive(); 
                 break;
             case 1:
-                Debug.Log("<color=green><b>Add Action</b></color>");
+                //Debug.Log("<color=green><b>Add Action</b></color>");
                 arrayTest.AddRandomSelectionFromManiframeDisabled();
                 break;
             case 2:
                 numberOfRandomBeam += 1;
                 if (numberOfRandomBeam >= forceAnActionCall)
                 {
-                    Debug.Log("<color=yellow><b>Forced Action Call</b></color>");
+                    //Debug.Log("<color=yellow><b>Forced Action Call</b></color>");
                     ForceActionCall();
                 } else
                 {
-                    Debug.Log("<color=white><b>Random Beam</b></color>");
+                    //Debug.Log("<color=white><b>Random Beam</b></color>");
                     arrayTest.RandomMainframeBeamSelection();
                 }
                 break;

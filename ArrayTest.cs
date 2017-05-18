@@ -174,16 +174,10 @@ public class ArrayTest : MonoBehaviour {
         mainframeController.ResetRotation();
         MainframeListClean();
         ActivateSignalSendThroughPlayerPrefabs();
-        Debug.Log("ActivateSignalSendThroughPlayerPrefabs?");
         MainframeListActiveActivation();
-        Debug.Log("MainframeListActiveActivation");
         MainframeListDeactivation();
-        Debug.Log("MainframeListDeactivation");
         mainframeActionSelection.SetRandomAction();
-        Debug.Log("SetRandomAction?");
         mainframeController.RandomSelection();
-        Debug.Log("RandomSelection?");
-
     }
 
     public void RunTheGame()
@@ -198,17 +192,21 @@ public class ArrayTest : MonoBehaviour {
     // NOTE: End of round is called on trigger enter in PositionOperator.cs 31
     public void EndOfRound()
     {
-        mainframeController.ResetRotation();
-        MainframeListClean();
-        ActivateSignalSendThroughPlayerPrefabs();
-        MainframeListActiveActivation();
-        MainframeListDeactivation();
-        mainframeActionSelection.SetRandomAction();
-        mainframeController.RandomSelection();
         if (!gameOver)
         {
+            mainframeController.ResetRotation();
+            MainframeListClean();
+            ActivateSignalSendThroughPlayerPrefabs();
+            MainframeListActiveActivation();
+            MainframeListDeactivation();
+            mainframeActionSelection.SetRandomAction();
+            mainframeController.RandomSelection();
             positionOperator.StartMovement();
+        } else
+        {
+            return;
         }
+
     } 
 
     public void GameOver()
@@ -229,6 +227,8 @@ public class ArrayTest : MonoBehaviour {
         MainframeListClean();
         gameOver = false;
         listDisabled = new List<GameObject>(allPlayerPrefabs);
+        mainframeActionSelection.numberOfLoops = 0;
+        mainframeActionSelection.numberOfRandomBeam = 0;
         PreparationOfTheFirstGame();
     }
     #endregion

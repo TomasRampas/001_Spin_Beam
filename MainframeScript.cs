@@ -43,7 +43,8 @@ public class MainframeScript : MonoBehaviour {
     #region CONTACT
     public void removeContact()
     {
-        Debug.Log("Remove collision noted");
+        //Debug.Log("Remove collision noted");
+        gameObject.tag = "NotActive";
         dummyObjectInvisible();
         playerObjectVisible();
         playerPrefabEmissivePart(1);
@@ -51,7 +52,8 @@ public class MainframeScript : MonoBehaviour {
 
     public void addContact()
     {
-        Debug.Log("Add collision noted");
+        //Debug.Log("Add collision noted");
+        gameObject.tag = "NotActive";
         dummyObjectVisible();
         dummyMaterialStates(2);
         playerObjectInvisible();

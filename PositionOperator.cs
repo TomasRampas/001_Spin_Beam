@@ -5,6 +5,11 @@ using Dreamteck.Splines;
 
 public class PositionOperator : MonoBehaviour {
 
+    // NOTE: Difficulty lvl variables
+    public Vector2 speedMinMax;
+    float speed;
+    float time;
+
     public GameObject mainframe;
     public GameObject gameManager;
     public GameObject orb;
@@ -19,23 +24,39 @@ public class PositionOperator : MonoBehaviour {
         follower = GetComponent<SplineFollower>();
         arrayTest = gameManager.GetComponent<ArrayTest>();
         orbScript = orb.GetComponent<OrbScript>();
-	}
+        DifficultyScript.elapsedTime = Time.time;
+
+    }
 	
 	void Update () {
 
-        /*#region TEST INPUT
+        #region TEST INPUT
+        /*
         if (Input.GetKeyDown(KeyCode.Keypad4))
         {
             StartMovement();
-        }
-        #endregion*/
+        }*/
+
+        /*
+        if (Input.GetKeyDown(KeyCode.Q))
+        {
+            RestartSpeed();
+        }*/
+        #endregion
+
+        DifficultyScript.elapsedTime = Time.time - time;
+        speed = Mathf.Lerp(speedMinMax.x, speedMinMax.y, DifficultyScript.GetDifficultyPercent());
+        follower.followSpeed = speed;
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.CompareTag("End"))
         {
-            mainframeActionSelection.starterPhase -= 1;
+            /*if(mainframeActionSelection.starterPhase > 0)
+            {
+                mainframeActionSelection.starterPhase -= 1;
+            }*/
             mainframeActionSelection.numberOfLoops += 1;
             StopMovement();
             arrayTest.EndOfRound();
@@ -65,5 +86,12 @@ public class PositionOperator : MonoBehaviour {
         follower.autoFollow = false;
     }
 
-    # endregion
+    #endregion
+
+    #region SPEED DIFFICULTY LVL
+    public void RestartSpeed()
+    {
+        time = Time.time;
+    }
+    #endregion
 }

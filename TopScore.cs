@@ -25,11 +25,11 @@ public class TopScore : MonoBehaviour {
 	void Update ()
     {
         #region TEST INPUT
-
+        /*
         if (Input.GetKeyDown(KeyCode.R))
         {
-            PlayerPrefs.DeleteKey("HighScore");
-        }
+            DeleteTopScore();
+        }*/
 
         #endregion
     }
@@ -45,5 +45,11 @@ public class TopScore : MonoBehaviour {
             topScore = PlayerPrefs.GetInt("HighScore", 0);
             topScoreText.text = "" + topScore;
         }
+    }
+
+    // NOTE: Debug only
+    public void DeleteTopScore()
+    {
+        PlayerPrefs.DeleteKey("HighScore");
     }
 }

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class OrbScript : MonoBehaviour {
 
+    public GameObject guiManagerObject;
     public GameObject orb;
     public GameObject orbPicked;
     public GameObject despawnColliderObject;
@@ -14,6 +15,7 @@ public class OrbScript : MonoBehaviour {
     private Collider despawnCollider;
     private ArrayTest arrayTest;
     private Score score;
+    GUIManager guiManager;
 
     ParticleSystem system
     {
@@ -36,6 +38,7 @@ public class OrbScript : MonoBehaviour {
         despawnCollider = despawnColliderObject.GetComponent<Collider>();
         arrayTest = gameManager.GetComponent<ArrayTest>();
         score = gameManager.GetComponent<Score>();
+        guiManager = guiManagerObject.GetComponent<GUIManager>();
     }
 
     void Update()
@@ -72,6 +75,8 @@ public class OrbScript : MonoBehaviour {
         Invoke ("PlayOrbParticle", 0.25f);
         collider.enabled = true;
         despawnCollider.enabled = true;
+        // NOTE: PLaceholder tutorial
+        guiManager.OrbSpawned();
     }
 
     public void DespawnOrb()
@@ -91,6 +96,9 @@ public class OrbScript : MonoBehaviour {
         collider.enabled = false;
         despawnCollider.enabled = false;
         score.addPoint();
+        // NOTE: Placeholder tutorial
+        guiManager.OrbPicked();
+
     }
 
     #endregion
