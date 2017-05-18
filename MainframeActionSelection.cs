@@ -37,6 +37,8 @@ public class MainframeActionSelection : MonoBehaviour
     }
 
     #region ACTION SELECTION
+
+    // TO DO: Figure out how to do the random selection thing for both
     public void SetRandomAction()
     {
         if (starterPhase <= numberOfLoops)

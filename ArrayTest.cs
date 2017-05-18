@@ -4,14 +4,30 @@ using UnityEngine;
 
 public class ArrayTest : MonoBehaviour {
 
-    public float startWait;
-    public float waveWait;
+
+
+    #region BLUE LISTS
     public List<GameObject> listActive = new List<GameObject>();
     public List<GameObject> listDisabled = new List<GameObject>();
     public List<GameObject> mainframeListActive = new List<GameObject>();
     public List<GameObject> mainframeListDisabled = new List<GameObject>();
+    #endregion
+
+    #region YELLOW LISTS
+    public List<GameObject> listActiveYellow = new List<GameObject>();
+    public List<GameObject> listDisabledYellow = new List<GameObject>();
+    public List<GameObject> mainframeListActiveYellow = new List<GameObject>();
+    public List<GameObject> mainframeListDisabledYellow = new List<GameObject>();
+    #endregion
+
+    #region SHARED LISTS
     public List<GameObject> allPlayerPrefabs = new List<GameObject>();
     public List<GameObject> AllMainframePrefabs = new List<GameObject>();
+    #endregion
+
+    public float startWait;
+    public float waveWait;
+
     public GameObject mainframeBody;
     public GameObject end;
     public GameObject gameOverText;
@@ -27,11 +43,6 @@ public class ArrayTest : MonoBehaviour {
     private bool GameStarted;
     private bool gameRunning;
     public bool gameOver;
-
-    void Awake()
-    {
-
-    }
 
     void Start()
     {
@@ -166,17 +177,31 @@ public class ArrayTest : MonoBehaviour {
 
         // NOTE: First time player setup
         AssignInDisableList();
+        AssignInDisableListYellow();
+
         PlayerPrefabRandomSelection();
+        PlayerPrefabRandomSelectionYellow();
+
         listActiveEnable();
+        listActiveEnableYellow();
+
         listDisabledDisable();
+        listDisabledDisableYellow();
 
         // NOTE: Mainframe setup
         mainframeController.ResetRotation();
         MainframeListClean();
         ActivateSignalSendThroughPlayerPrefabs();
+
         MainframeListActiveActivation();
+        MainframeListActiveActivationYellow();
+
         MainframeListDeactivation();
+        MainframeListDeactivationYellow();
+
+        // TO DO: Add yellow prefabs for random selection
         mainframeActionSelection.SetRandomAction();
+
         mainframeController.RandomSelection();
     }
 
@@ -197,8 +222,13 @@ public class ArrayTest : MonoBehaviour {
             mainframeController.ResetRotation();
             MainframeListClean();
             ActivateSignalSendThroughPlayerPrefabs();
+
             MainframeListActiveActivation();
+            MainframeListActiveActivationYellow();
+
             MainframeListDeactivation();
+            MainframeListDeactivationYellow();
+
             mainframeActionSelection.SetRandomAction();
             mainframeController.RandomSelection();
             positionOperator.StartMovement();
@@ -234,6 +264,8 @@ public class ArrayTest : MonoBehaviour {
     #endregion
 
     #region PLAYER PREFABS
+
+    #region PLAYER BLUE
     void AssignInDisableList()
     {
         for (int i = 0; i < listDisabled.Count; i++)
@@ -307,6 +339,85 @@ public class ArrayTest : MonoBehaviour {
             TagAssignment(selected, 2);
         }
     }
+    #endregion
+
+    #region PLAYER YELLOW
+    void AssignInDisableListYellow()
+    {
+        for (int i = 0; i < listDisabledYellow.Count; i++)
+        {
+            GameObject selected;
+            CubeScriptYellow cubeScriptYellow;
+            Component[] meshRenderer;
+            selected = listDisabledYellow[i];
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = false;
+            }
+            cubeScriptYellow = selected.GetComponent<CubeScriptYellow>();
+            cubeScriptYellow.SetAsDisabled();
+
+        }
+    }
+
+    void PlayerPrefabRandomSelectionYellow()
+    {
+        int numberOfSelections = 1;
+        for (int i = 0; i < numberOfSelections; i++)
+        {
+            GameObject selected;
+            CubeScriptYellow prefabScriptYellow;
+            int randomSelection = Random.Range(0, listDisabledYellow.Count);
+            selected = listDisabledYellow[randomSelection];
+            prefabScriptYellow = selected.GetComponent<CubeScriptYellow>();
+            prefabScriptYellow.SetAsActive();
+            listActiveYellow.Add(listDisabledYellow[randomSelection]);
+            listDisabledYellow.Remove(listDisabledYellow[randomSelection]);
+        }
+
+    }
+
+    void listActiveEnableYellow()
+    {
+        for (int i = 0; i < listActiveYellow.Count; i++)
+        {
+            GameObject selected;
+            CubeScriptYellow cubeScriptYellow;
+            selected = listActiveYellow[i];
+            Component[] meshRenderer;
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = true;
+            }
+            cubeScriptYellow = selected.GetComponent<CubeScriptYellow>();
+            cubeScriptYellow.SetAsActive();
+            TagAssignment(selected, 5);
+        }
+    }
+
+    void listDisabledDisableYellow()
+    {
+        for (int i = 0; i < listDisabledYellow.Count; i++)
+        {
+            GameObject selected;
+            CubeScriptYellow cubeScriptYellow;
+            Component[] meshRenderer;
+            selected = listDisabledYellow[i];
+            meshRenderer = selected.GetComponentsInChildren<MeshRenderer>();
+            foreach (MeshRenderer mesh in meshRenderer)
+            {
+                mesh.enabled = false;
+            }
+            cubeScriptYellow = selected.GetComponent<CubeScriptYellow>();
+            cubeScriptYellow.SetAsDisabled();
+            TagAssignment(selected, 6);
+        }
+    }
+    #endregion
+
+    #region PLAYER SHARED
 
     void ActivateSignalSendThroughPlayerPrefabs()
     {
@@ -318,12 +429,21 @@ public class ArrayTest : MonoBehaviour {
             cubeScript = selected.GetComponent<CubeScript>();
             cubeScript.SendSignalToMainframePrefabs();
         }
+
+        for (int i = 4; i < 8; i++)
+        {
+            GameObject selected;
+            CubeScriptYellow cubeScriptYellow;
+            selected = allPlayerPrefabs[i];
+            cubeScriptYellow = selected.GetComponent<CubeScriptYellow>();
+            cubeScriptYellow.SendSignalToMainframePrefabs();
+        }
     }
 
     void ResetOfPlayerLists()
     {
         // NOTE: Reset of Player GameObjects to their default state (tag, material)
-        for (int i = 0; i < allPlayerPrefabs.Count; i++)
+        for (int i = 0; i < 4; i++)
         {
             GameObject playerBeam;
             CubeScript cubeScript;
@@ -333,14 +453,28 @@ public class ArrayTest : MonoBehaviour {
             TagAssignment(playerBeam, 2);
         }
 
+        for (int i = 4; i < 8; i++)
+        {
+            GameObject playerBeam;
+            CubeScriptYellow cubeScriptYellow;
+            playerBeam = allPlayerPrefabs[i];
+            cubeScriptYellow = playerBeam.GetComponent<CubeScriptYellow>();
+            cubeScriptYellow.resetThePlayerBeam();
+            TagAssignment(playerBeam, 6);
+        }
+
         // NOTE: Cleaning of Mainframe lists for new assignment
         listActive.Clear();
         listDisabled.Clear();
+        listActiveYellow.Clear();
+        listDisabledYellow.Clear();
     }
-
+    #endregion
     #endregion
 
     #region OUTSIDE INPUT
+
+    #region BLUE PREFABS INPUT
     public void PlayerBeamRemoveContact(GameObject selected)
     {
         int cubeIndex;
@@ -360,7 +494,31 @@ public class ArrayTest : MonoBehaviour {
         listDisabledDisable();
         listActiveEnable();
     }
+    #endregion
 
+    #region YELLOW PREFABS INPUT
+    public void PlayerBeamRemoveContactYellow(GameObject selected)
+    {
+        int cubeIndex;
+        cubeIndex = listActiveYellow.IndexOf(selected);
+        listDisabledYellow.Add(selected);
+        listActiveYellow.RemoveAt(cubeIndex);
+        listDisabledDisableYellow();
+        listActiveEnableYellow();
+    }
+
+    public void PlayerBeamAddContactYellow(GameObject selected)
+    {
+        int cubeIndex;
+        cubeIndex = listDisabledYellow.IndexOf(selected);
+        listActiveYellow.Add(selected);
+        listDisabledYellow.RemoveAt(cubeIndex);
+        listDisabledDisableYellow();
+        listActiveEnableYellow();
+    }
+    #endregion
+
+    #region SHARED
     public void PlayLaserParticle()
     {
         for (int i = 0; i < listActive.Count; i++)
@@ -371,12 +529,24 @@ public class ArrayTest : MonoBehaviour {
             cubeParticleScript = playerBeam.GetComponent<CubeScript>();
             cubeParticleScript.playLaserParticle();
         }
+
+        for (int i = 0; i < listActiveYellow.Count; i++)
+        {
+            GameObject playerBeam;
+            CubeScriptYellow cubeParticleScript;
+            playerBeam = listActiveYellow[i];
+            cubeParticleScript = playerBeam.GetComponent<CubeScriptYellow>();
+            cubeParticleScript.playLaserParticle();
+        }
+
     }
+    #endregion
 
     #endregion
 
-    # region MAINFRAME PREFABS
+    #region MAINFRAME PREFABS
 
+    #region MAINFRAME BLUE
     public void AddToMainframeListActive(GameObject selected)
     {
         mainframeListActive.Add(selected);
@@ -412,11 +582,51 @@ public class ArrayTest : MonoBehaviour {
             TagAssignment(selected, 2);
         }
     }
+    #endregion
 
+    #region MAINFRAME YELLOW
+    public void AddToMainframeListActiveYellow(GameObject selected)
+    {
+        mainframeListActiveYellow.Add(selected);
+    }
+
+    public void AddToMainframeListDisabledYellow(GameObject selected)
+    {
+        mainframeListDisabledYellow.Add(selected);
+    }
+
+    public void MainframeListActiveActivationYellow()
+    {
+        for (int i = 0; i < mainframeListActiveYellow.Count; i++)
+        {
+            GameObject selected;
+            MainframeScriptYellow mainframeScriptYellow;
+            selected = mainframeListActiveYellow[i];
+            mainframeScriptYellow = selected.GetComponent<MainframeScriptYellow>();
+            mainframeScriptYellow.activeMainframePrefab();
+            TagAssignment(selected, 5);
+        }
+    }
+
+    public void MainframeListDeactivationYellow()
+    {
+        for (int i = 0; i < mainframeListDisabled.Count; i++)
+        {
+            GameObject selected;
+            MainframeScriptYellow mainframeScriptYellow;
+            selected = mainframeListDisabledYellow[i];
+            mainframeScriptYellow = selected.GetComponent<MainframeScriptYellow>();
+            mainframeScriptYellow.deactivatedMainframePrefab();
+            TagAssignment(selected, 6);
+        }
+    }
+    #endregion
+
+    #region SHARED METHODS
     public void MainframeListClean()
     {
         // NOTE: Reset of Mainframe GameObjects to their default state (tag, material)
-        for (int i = 0; i < AllMainframePrefabs.Count; i++)
+        for (int i = 0; i < 4; i++)
         {
             GameObject mainframeBeam;
             MainframeScript mainframeScript;
@@ -426,13 +636,27 @@ public class ArrayTest : MonoBehaviour {
             TagAssignment(mainframeBeam, 2);
         }
 
+        for (int i = 4; i < 8; i++)
+        {
+            GameObject mainframeBeam;
+            MainframeScriptYellow mainframeScriptYellow;
+            mainframeBeam = AllMainframePrefabs[i];
+            mainframeScriptYellow = mainframeBeam.GetComponent<MainframeScriptYellow>();
+            mainframeScriptYellow.resetMainframePrefab();
+            TagAssignment(mainframeBeam, 6);
+        }
+
         // NOTE: Cleaning of Mainframe lists for new assignment
         mainframeListDisabled.Clear();
         mainframeListActive.Clear();
+        mainframeListDisabledYellow.Clear();
+        mainframeListActiveYellow.Clear();
     }
+    #endregion
     #endregion
 
     #region MAINFRAME RANDOM ACTIONS
+    #region MAINFRAME BLUE
     public GameObject RandomMainframeBeamSelection()
     {
         int randomSelection;
@@ -468,6 +692,49 @@ public class ArrayTest : MonoBehaviour {
         TagAssignment(ExtraActionSelection, 3);
         return ExtraActionSelection;
     }
+    #endregion
+
+    #region MAINFRAME YELLOW
+    public GameObject RandomMainframeBeamSelectionYellow()
+    {
+        int randomSelection;
+        MainframeScriptYellow mainframeScriptYellow;
+        randomSelection = Random.Range(0, mainframeListDisabledYellow.Count);
+        ExtraActionSelection = mainframeListDisabledYellow[randomSelection];
+        mainframeScriptYellow = ExtraActionSelection.GetComponent<MainframeScriptYellow>();
+        // TO DO: Some extra work will be have to done here
+        mainframeScriptYellow.activeMainframePrefab();
+        TagAssignment(ExtraActionSelection, 5);
+        return ExtraActionSelection;
+    }
+
+    public GameObject RemoveRandomSelectionFromMainframeActiveYellow()
+    {
+        int randomSelection;
+        MainframeScriptYellow mainframeScriptYellow;
+        randomSelection = Random.Range(0, mainframeListActiveYellow.Count);
+        ExtraActionSelection = mainframeListActiveYellow[randomSelection];
+        mainframeScriptYellow = ExtraActionSelection.GetComponent<MainframeScriptYellow>();
+        // TO DO: Some extra work will be have to done here
+        mainframeScriptYellow.removeMainframePrefab();
+        TagAssignment(ExtraActionSelection, 8);
+        return ExtraActionSelection;
+    }
+
+    public GameObject AddRandomSelectionFromManiframeDisabledYellow()
+    {
+        int randomSelection;
+        MainframeScriptYellow mainframeScriptYellow;
+        randomSelection = Random.Range(0, mainframeListDisabledYellow.Count);
+        ExtraActionSelection = mainframeListDisabledYellow[randomSelection];
+        mainframeScriptYellow = ExtraActionSelection.GetComponent<MainframeScriptYellow>();
+        // TO DO: Some extra work will be have to done here
+        mainframeScriptYellow.addMainframePrefab();
+        TagAssignment(ExtraActionSelection, 7);
+        return ExtraActionSelection;
+    }
+    #endregion
+
     #endregion
 
     #region REUSABLE METHODS
@@ -510,6 +777,18 @@ public class ArrayTest : MonoBehaviour {
                 break;
             case 4:
                 AssignTag.tag = "Remove";
+                break;
+            case 5:
+                AssignTag.tag = "ActiveYellow";
+                break;
+            case 6:
+                AssignTag.tag = "NotActiveYellow";
+                break;
+            case 7:
+                AssignTag.tag = "AddYellow";
+                break;
+            case 8:
+                AssignTag.tag = "RemoveYellow";
                 break;
             default:
                 break;

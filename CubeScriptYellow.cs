@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CubeScript : MonoBehaviour {
+public class CubeScriptYellow : MonoBehaviour {
 
     public GameObject MainframeCube;
     public GameObject LaserParticle;
@@ -14,7 +14,7 @@ public class CubeScript : MonoBehaviour {
     private OrbScript orbScript;
 
     private bool ActivePlayerPrefab;
-    private MainframeScript mainframeScript;
+    private MainframeScriptYellow mainframeScript;
 
     void Awake()
     {
@@ -22,7 +22,7 @@ public class CubeScript : MonoBehaviour {
 
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         arrayTest = gameControllerObject.GetComponent<ArrayTest>();
-        mainframeScript = MainframeCube.GetComponent<MainframeScript>();
+        mainframeScript = MainframeCube.GetComponent<MainframeScriptYellow>();
     }
 
     void Start () {
@@ -89,31 +89,31 @@ public class CubeScript : MonoBehaviour {
     #region CONNECTION WITH ARRAYTEST
     public void RemoveContact()
     {
-        arrayTest.PlayerBeamRemoveContact(gameObject);
+        arrayTest.PlayerBeamRemoveContactYellow(gameObject);
     }
 
     public void AddContact()
     {
-        arrayTest.PlayerBeamAddContact(gameObject);
+        arrayTest.PlayerBeamAddContactYellow(gameObject);
     }
 # endregion
 
     #region COLLISION RULES
     void OnTriggerEnter(Collider other)
     {
-        if (gameObject.tag == ("Active"))
+        if (gameObject.tag == ("ActiveYellow"))
         {
-            if (other.gameObject.CompareTag("Active"))
+            if (other.gameObject.CompareTag("ActiveYellow"))
             {
                 // success, point added, new round coming
             }
-            else if (other.gameObject.CompareTag("Remove"))
+            else if (other.gameObject.CompareTag("RemoveYellow"))
             {
                 // success, change state of this prefab (deactivate), new round coming
                 SetAsDisabled();
                 RemoveContact();
-                MainframeScript mainScript;
-                mainScript = other.GetComponent<MainframeScript>();
+                MainframeScriptYellow mainScript;
+                mainScript = other.GetComponent<MainframeScriptYellow>();
                 mainScript.removeContact();
                 
             }
@@ -122,22 +122,22 @@ public class CubeScript : MonoBehaviour {
                 // fail, stop the game
                 arrayTest.GameOver();
             }
-        } else if (gameObject.tag == ("NotActive"))
+        } else if (gameObject.tag == ("NotActiveYellow"))
         {
-            if (other.gameObject.CompareTag("Add"))
+            if (other.gameObject.CompareTag("AddYellow"))
             {
                 // success, change state of this prefab (activate), new round coming
                 SetAsActive();
                 AddContact();
-                MainframeScript mainScript;
-                mainScript = other.GetComponent<MainframeScript>();
+                MainframeScriptYellow mainScript;
+                mainScript = other.GetComponent<MainframeScriptYellow>();
                 mainScript.addContact();
             }
-            else if (other.gameObject.CompareTag("NotActive"))
+            else if (other.gameObject.CompareTag("NotActiveYellow"))
             {
                 // success, point added, new round coming
             }
-            else if (other.gameObject.CompareTag("Active"))
+            else if (other.gameObject.CompareTag("ActiveYellow"))
             {
                 // success, point added, new round coming
                 //happens when extra active mainframe beam hits invisible player beam
