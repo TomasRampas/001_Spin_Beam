@@ -13,7 +13,7 @@ public class CubeScript : MonoBehaviour {
     private GameObject cube;
     private OrbScript orbScript;
 
-    private bool ActivePlayerPrefab;
+    public bool ActivePlayerPrefab;
     private MainframeScript mainframeScript;
 
     void Awake()

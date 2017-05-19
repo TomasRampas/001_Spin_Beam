@@ -34,6 +34,5 @@ public class MainframeController : MonoBehaviour {
     public void ResetRotation()
     {
         transform.rotation = Quaternion.identity;
-        Debug.Log("Reset Rotation");
     }
 }

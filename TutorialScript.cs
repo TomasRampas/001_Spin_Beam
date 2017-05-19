@@ -90,5 +90,23 @@ public class TutorialScript : MonoBehaviour {
         PlayerPrefs.DeleteKey("PlayTutorial");
     }
 
+    public void TestingStuff()
+    {
+        int blue;
+        int yellow;
+
+        blue = 1;
+        yellow = 0;
+
+        if (blue * yellow == 1)
+        {
+
+        }
+
+        if (blue + yellow < 2)
+        {
+
+        }
+    }
 
 }

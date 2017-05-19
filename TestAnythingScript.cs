@@ -9,6 +9,15 @@ public class TestAnythingScript : MonoBehaviour {
     float speed;
     float time;
 
+    float value = 1f;
+
+    // NEW STUFF
+    int range = 2;
+
+    int testValue1 = 1;
+
+    List<int> testValues = new List<int>();
+
     SplineFollower follower;
 
     void Start() {
@@ -24,7 +33,13 @@ public class TestAnythingScript : MonoBehaviour {
 
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            restartSpeed();
+            ArrayTest2();
+
+        }
+
+        if (Input.GetKeyDown(KeyCode.W))
+        {
+            ArrayTest();
         }
     }
 
@@ -32,4 +47,27 @@ public class TestAnythingScript : MonoBehaviour {
     {
         time = Time.time;
     }
+
+    void AssignObjectTolist()
+    {
+        testValues.Add(testValue1);
+        Debug.Log("testValue1 " + testValue1);
+    }
+
+
+    void ArrayTest2()
+    {
+        range += 1;
+        Debug.Log("range " + range);
+    }
+
+    void ArrayTest()
+    {
+        int randomAction;
+        int[] actionNumber2 = new int[] { 1, 2, 3, 4, 5, 6 };
+        randomAction = actionNumber2[Random.Range(0, range)];
+        Debug.Log("random selection " + randomAction);
+
+    }
+
 }

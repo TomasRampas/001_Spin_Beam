@@ -199,8 +199,7 @@ public class ArrayTest : MonoBehaviour {
         MainframeListDeactivation();
         MainframeListDeactivationYellow();
 
-        // TO DO: Add yellow prefabs for random selection
-        mainframeActionSelection.SetRandomAction();
+        mainframeActionSelection.CallRandomAction();
 
         mainframeController.RandomSelection();
     }
@@ -229,7 +228,8 @@ public class ArrayTest : MonoBehaviour {
             MainframeListDeactivation();
             MainframeListDeactivationYellow();
 
-            mainframeActionSelection.SetRandomAction();
+            mainframeActionSelection.CallRandomAction();
+
             mainframeController.RandomSelection();
             positionOperator.StartMovement();
         } else
@@ -256,9 +256,24 @@ public class ArrayTest : MonoBehaviour {
         ResetOfPlayerLists();
         MainframeListClean();
         gameOver = false;
-        listDisabled = new List<GameObject>(allPlayerPrefabs);
-        mainframeActionSelection.numberOfLoops = 0;
-        mainframeActionSelection.numberOfRandomBeam = 0;
+
+        // NOTE: for loops assigning game object to disable lists for blue and yellow
+        for (int i = 0; i < 4; i++)
+        {
+            GameObject selected;
+            selected = allPlayerPrefabs[i];
+            listDisabled.Add(selected);
+        }
+
+        for (int i = 4; i < 8; i++)
+        {
+            GameObject selected;
+            selected = allPlayerPrefabs[i];
+            listDisabledYellow.Add(selected);
+        }
+
+        mainframeActionSelection.ResetMainframeActionSelection();
+
         PreparationOfTheFirstGame();
     }
     #endregion

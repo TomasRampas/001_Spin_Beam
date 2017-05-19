@@ -14,7 +14,6 @@ public class AdManager : MonoBehaviour
         showBannerAd();
         RequestInterstitialAds();
         numberOfLoops = PlayerPrefs.GetInt("NumberOfLoops", 0);
-        Debug.Log("<color=red><b>numberOfLoops on start" + numberOfLoops + "</b></color>");
     }
 
     #region SMALL BANNER
