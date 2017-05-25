@@ -11,8 +11,8 @@ public class AdManager : MonoBehaviour
 
     void Start()
     {
-        showBannerAd();
-        RequestInterstitialAds();
+        //showBannerAd(); // REMOVE THIS COMMENT TO ENABLE BANNER
+        //RequestInterstitialAds(); // REMOVE THIS COMMENT TO ENABLE LARGE COMMERCIALS
         numberOfLoops = PlayerPrefs.GetInt("NumberOfLoops", 0);
     }
 

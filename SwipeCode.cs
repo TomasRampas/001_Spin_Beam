@@ -4,12 +4,28 @@ using UnityEngine;
 
 public class SwipeCode : MonoBehaviour
 {
+    public bool tutCheck;
+    public GameObject tutObject;
+
+    TutorialScript tutScript;
     private bool tap, swipeLeft, swipeRight, swipeUp, swipeDown;
     private bool isDraging = false;
     private Vector2 startTouch, swipeDelta;
 
+    private void Start()
+    {
+        tutScript = tutObject.GetComponent<TutorialScript>();
+    }
+
     private void Update()
     {
+        if (tutCheck && isDraging)
+        {
+            tutCheck = false;
+            tutScript.PlayEndTutorialPart(2);
+        }
+
+
         tap = swipeLeft = swipeRight = swipeUp = swipeDown = false;
 
         #region Standalone Inputs
@@ -86,6 +102,14 @@ public class SwipeCode : MonoBehaviour
     {
         startTouch = swipeDelta = Vector2.zero;
         isDraging = false;
+    }
+
+    public bool SwipeState
+    {
+        get
+        {
+            return isDraging;
+        }
     }
 
     public Vector2 SwipeDelta { get { return swipeDelta; } }

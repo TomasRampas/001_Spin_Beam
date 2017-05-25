@@ -10,18 +10,26 @@ public class GUIManager : MonoBehaviour {
     public GameObject topScore;
     public GameObject MainframeBody;
     public Camera mainCamera;
+    public GameObject mainCameraObject;
     public GameObject gameManager;
     public GameObject gameOver;
     public GameObject inGameScoreText;
     public GameObject TopScoreHolder;
     public GameObject Ads;
     public GameObject MainMainframeBody;
+    public GameObject playIcon;
+    public GameObject particles;
+    public Light circleLightl;
+    public SpriteRenderer guiSprite;
 
+    CameraMovement cameraMovement;
     SplineFollower GUIMainframeBody;
     SplineFollower GUImainCamera;
     TopScore topScoreScript;
     PositionOperator positionOperator;
     TutorialScript tutorialScript;
+    MeshRenderer playMesh;
+    OrbScript orbScript;
 
     AdManager adManager;
     private bool GUIMainframeBodyMovement;
@@ -32,9 +40,12 @@ public class GUIManager : MonoBehaviour {
 
 
     void Start () {
+        orbScript = particles.GetComponent<OrbScript>();
+        cameraMovement = mainCameraObject.GetComponent<CameraMovement>();
         topScoreScript = TopScoreHolder.GetComponent<TopScore>();
         GUIMainframeBody = MainframeBody.GetComponent<SplineFollower>();
         GUImainCamera = mainCamera.GetComponent<SplineFollower>();
+        playMesh = playIcon.GetComponent<MeshRenderer>();
         arrayTest = gameManager.GetComponent<ArrayTest>();
         guiMainframeScript = MainframeBody.GetComponent<GUImainframeScript>();
         score = gameManager.GetComponent<Score>();
@@ -66,8 +77,19 @@ public class GUIManager : MonoBehaviour {
     // NOTE: Called by menu button
     public void startButtonStart()
     {
+        orbScript.StopGuiOrb();
+        orbScript.GuiOrbPciked();
+        Invoke("startMovementInvoke", 0.5f);
+    }
+
+    void startMovementInvoke()
+    {
+        score.resetScore();
+        guiSprite.enabled = false;
+        circleLightl.enabled = false;
         InMenuGUI(false);
         GUImainCamera.direction = Spline.Direction.Forward;
+        cameraMovement.SetFOVZoomOut();
     }
 
     // NOTE: Called by 
@@ -87,6 +109,13 @@ public class GUIManager : MonoBehaviour {
         positionOperator.RestartSpeed();
         InGameGUI(true);
         guiMainframeScript.DisableGUIMainframe();
+        playMesh.enabled = false;
+        Invoke("toInvokeTutorial", 1f);
+    }
+
+    void toInvokeTutorial()
+    {
+        tutorialScript.PlayEndTutorialPart(1);
     }
 
     #endregion
@@ -95,28 +124,38 @@ public class GUIManager : MonoBehaviour {
 
     public void gameOverCalledOver()
     {
-        Invoke("InvokedMainframeMovement", 0.7f);
+        Invoke("InvokedMainframeMovement", 0.9f);
     }
 
     void InvokedMainframeMovement()
     {
         guiMainframeScript.EnableGUIMainframe();
+        playMesh.enabled = true;
         GUIMainframeBody.direction = Spline.Direction.Forward;
     }
 
     public void mainframeTriggerOver()
     {
         GUImainCamera.direction = Spline.Direction.Backward;
+        cameraMovement.SetFOVZoomIn();
         InGameGUI(false);
         topScoreScript.GameOverScoreCheck();
-        score.resetScore();
         adManager.UpdateCounter();
+        Invoke("InvokedguiSprite", 1.4f);
+    }
+
+    void InvokedguiSprite()
+    {
+        guiSprite.enabled = true;
     }
 
     // NOTE: The final trigger of game over state
     public void cameraTriggerOver()
     {
         InMenuGUI(true);
+        orbScript.PlayGuiOrb();
+        circleLightl.enabled = true;
+        playMesh.enabled = true;
         arrayTest.GameReset();
     }
 
@@ -162,7 +201,7 @@ public class GUIManager : MonoBehaviour {
 
     void InvokePlayTutorial()
     {
-        tutorialScript.PlayTutorial(1);
+        //tutorialScript.PlayTutorial(1);
     }
 
     public void OrbPicked()
@@ -173,8 +212,8 @@ public class GUIManager : MonoBehaviour {
         }
         else
         {
-            tutorialScript.EndTutorial(1);
-            tutorialScript.EndTutorial(3);
+            //tutorialScript.EndTutorial(1);
+            //tutorialScript.EndTutorial(3);
         }
     }
     #endregion

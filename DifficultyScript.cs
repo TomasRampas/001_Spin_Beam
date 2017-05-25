@@ -7,7 +7,7 @@ public static class DifficultyScript
     public static float elapsedTime;
 
     // Time after which the maximum difficulty will be reached
-    static float secondsToMaxDifficutly = 60;
+    static float secondsToMaxDifficutly = 120;
 
     public static float GetDifficultyPercent()
     {

@@ -302,7 +302,8 @@ public class ArrayTest : MonoBehaviour {
 
     void PlayerPrefabRandomSelection()
     {
-        int numberOfSelections = 2;
+        // NOTE: IMPORTANT the numberOfSelections defines how many blue beam are active on the start
+        int numberOfSelections = 1; 
         for (int i = 0; i < numberOfSelections; i++)
         {
             GameObject selected;
@@ -625,7 +626,7 @@ public class ArrayTest : MonoBehaviour {
 
     public void MainframeListDeactivationYellow()
     {
-        for (int i = 0; i < mainframeListDisabled.Count; i++)
+        for (int i = 0; i < mainframeListDisabledYellow.Count; i++)
         {
             GameObject selected;
             MainframeScriptYellow mainframeScriptYellow;
