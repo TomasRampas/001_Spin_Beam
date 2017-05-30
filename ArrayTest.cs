@@ -32,6 +32,7 @@ public class ArrayTest : MonoBehaviour {
     public GameObject end;
     public GameObject gameOverText;
     public GameObject guiManagerObject;
+    public GameObject mainframe;
 
     private MainframeController mainframeController;
     private MainframeActionSelection mainframeActionSelection;
@@ -39,6 +40,7 @@ public class ArrayTest : MonoBehaviour {
     private MaterialChanger materialChanger;
     private GameObject ExtraActionSelection;
     private GUIManager guiManager;
+    private RotationSelection rotationSelection;
 
     private bool GameStarted;
     private bool gameRunning;
@@ -46,6 +48,7 @@ public class ArrayTest : MonoBehaviour {
 
     void Start()
     {
+        rotationSelection = mainframe.GetComponent<RotationSelection>();
         GameObject MainframeController = GameObject.FindWithTag("MainframeController");
         mainframeController = MainframeController.GetComponent<MainframeController>();
         mainframeActionSelection = MainframeController.GetComponent<MainframeActionSelection>();
@@ -200,8 +203,10 @@ public class ArrayTest : MonoBehaviour {
         MainframeListDeactivationYellow();
 
         mainframeActionSelection.CallRandomAction();
+        AssignAllBeamsInActiveLists();
 
-        mainframeController.RandomSelection();
+        rotationSelection.SetMainframeRotation();
+
     }
 
     public void RunTheGame()
@@ -229,8 +234,10 @@ public class ArrayTest : MonoBehaviour {
             MainframeListDeactivationYellow();
 
             mainframeActionSelection.CallRandomAction();
+            AssignAllBeamsInActiveLists();
 
-            mainframeController.RandomSelection();
+            rotationSelection.SetMainframeRotation();
+
             positionOperator.StartMovement();
         } else
         {
@@ -486,6 +493,33 @@ public class ArrayTest : MonoBehaviour {
         listDisabledYellow.Clear();
     }
     #endregion
+    #endregion
+
+    #region SELECTION OF MAINFRAME ROTATION
+    
+    // NOTE: Assign all mainframe and player beams in active lists
+    void AssignAllBeamsInActiveLists()
+    {
+        for (int i = 0; i < allPlayerPrefabs.Count; i++)
+        {
+            GameObject selected;
+            PlayerRotationSelection playerRotationSelection;
+            selected = allPlayerPrefabs[i];
+            playerRotationSelection = selected.GetComponent<PlayerRotationSelection>();
+            playerRotationSelection.AssignPlayerBeamToSelectionList();
+        }
+
+        for (int i = 0; i < AllMainframePrefabs.Count; i++)
+        {
+            GameObject selected;
+            MainframeRotationSelection mainframeRotationSelection;
+            selected = AllMainframePrefabs[i];
+            mainframeRotationSelection = selected.GetComponent<MainframeRotationSelection>();
+            mainframeRotationSelection.AssignMainframeBeamToSelectionList();
+        }
+    }
+
+
     #endregion
 
     #region OUTSIDE INPUT

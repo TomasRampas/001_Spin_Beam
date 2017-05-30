@@ -8,24 +8,27 @@ public class CubeScript : MonoBehaviour {
     public GameObject LaserParticle;
     public GameObject PlayerBeamBodyEmissive;
     public GameObject PlayerBeamBody;
-
+   
     private ArrayTest arrayTest;
     private GameObject cube;
     private OrbScript orbScript;
 
     public bool ActivePlayerPrefab;
     private MainframeScript mainframeScript;
+    private PlayerRotationSelection playerRotationSelection;
 
     void Awake()
     {
         cube = gameObject;
-
+        playerRotationSelection = gameObject.GetComponent<PlayerRotationSelection>();
         GameObject gameControllerObject = GameObject.FindWithTag("GameController");
         arrayTest = gameControllerObject.GetComponent<ArrayTest>();
         mainframeScript = MainframeCube.GetComponent<MainframeScript>();
     }
 
     void Start () {
+
+        
 
         // INFO: Make connection with orb script
         GameObject orb = GameObject.FindWithTag("Orb");
@@ -65,10 +68,12 @@ public class CubeScript : MonoBehaviour {
     {
         if (ActivePlayerPrefab == false)
         {
+            playerRotationSelection.objectActive = false;
             mainframeScript.AddToDisabledArray();
         }
         else
         {
+            playerRotationSelection.objectActive = true;
             mainframeScript.AddToEnabledArray();
         }
     }
@@ -160,5 +165,5 @@ public class CubeScript : MonoBehaviour {
         laserScript.PlayLaserParticle();
     }
 
-    # endregion
+    #endregion
 }

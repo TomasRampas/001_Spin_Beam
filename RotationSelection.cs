@@ -4,92 +4,100 @@ using UnityEngine;
 
 public class RotationSelection : MonoBehaviour {
 
-	void Start () {
-		
-	}
-	
-	void Update () {
-		
+    private int rotation;
+    private int lastRotation;
+    public GameObject mainframe;
+
+    public List<int> playerBeams = new List<int>();
+    public List<int> mainframeBeams = new List<int>();
+    public List<int> NotMatchingRot = new List<int>();
+
+    private MainframeController mainframeController;
+
+    private void Awake()
+    {
+        mainframeController = mainframe.GetComponent<MainframeController>();
+    }
+
+    void Start()
+    {
+        
+    }
+
+    void Update () {
+
+        #region TEST INPUT
+        /*
         if (Input.GetKeyDown(KeyCode.X))
         {
             FindNotMatchingCombinations();
-        }
+        }*/
+        #endregion
 
-	}
+    }
 
-    /*
-    // NOTE: This method checks all possible combinations
-    void CombinationTest()
+    #region INPUT AREA
+
+    #region ROTATION VALUE UPDATE
+    public void updatePlayerRotationValue(int value)
     {
-        int playerCombinationSize;
-        playerCombinationSize = playerBeams.Count;
+        rotation += value;
 
-        // NOTE: Round
-        for (int x = 0; x < 4; x++)
+    }
+
+    public void InputRotationCheck()
+    {
+        if (rotation > 4)
         {
-            int equalValuesFound = 0;
-            int validCombinations;
-
-            // NOTE: Check of player beams
-            for (int i = 0; i < playerBeams.Count; i++)
-            {
-                
-                int playerBeamValue;
-                playerBeamValue = playerBeams[i];
-
-                // NOTE: Checking slected player beam against all active mainframe beams
-                for (int a = 0; a < mainframeBeams.Count; a++)
-                {
-                    int mainframeBeamValue;
-                    mainframeBeamValue = mainframeBeams[a];
-                    playerBeamValue -= mainframeBeamValue;
-                    if (playerBeamValue == 0)
-                    {
-                        equalValuesFound++;
-                    }
-                }
-            }
-
-            validCombinations = playerCombinationSize - equalValuesFound;
-
-            if (validCombinations != 0)
-            {
-                // TO DO: Round marked as "no solution"
-                // TO DO: Add this round to list for final rotation selection
-            }
-
+            rotation = 1;
+        } else if (rotation <= 0) 
+        {
+            rotation = 4;
         }
-    }*/
+        Debug.Log("<color=yellow><b>New rotation " + rotation + "//////////////////////</b></color>");
+    }
+    #endregion
 
-    #region NEW SYSTEM
+    public void addPlayerValuesToList(int beamValue)
+    {
+        playerBeams.Add(beamValue);
+        Debug.Log("<color=red><b>Player Beam value " + beamValue + "//////////////////////</b></color>");
+    }
 
-    // TO DO: Assign here the final selection of both player and mainframe beams
-    [Header ("Player Test input")]
-    public List<int> playerBeams = new List<int>(); // TO DO: set to private once done with correct value assignment
-    [Header("Mainframe Test input")]
-    public List<int> mainframeBeams = new List<int>(); // TO DO: set to private once done with correct value assignment
-
-    public List<int> NotMatchingRot = new List<int>();
-    [Header("Player Test rotation")]
-    public int rotation; // TO DO: set to private once done with correct value assignment
+    public void addMainframeValuesToList(int mainValue)
+    {
+        mainframeBeams.Add(mainValue);
+        Debug.Log("<color=red><b>Mainframe Beam value " + mainValue + "//////////////////////</b></color>");
+    }
 
     // NOTE: Call to trigger mainframe counter rotation
-    public void SetMainframeRotation(int playerRotation)
+    public void SetMainframeRotation()
     {
-        rotation = playerRotation;
         FindNotMatchingCombinations();
     }
+    #endregion
+
+    #region OUTPUT AREA
+
+    void SendSelectedRotation(int selectedRotation)
+    {
+        mainframeController.RandomTurn(selectedRotation);
+    }
+    #endregion
+
+    #region SYSTEM
 
     // NOTE: Find false rotations of the Player
     void FindNotMatchingCombinations()
     {
+        lastRotation = rotation;
         int playerCombinationSize;
         playerCombinationSize = playerBeams.Count;
 
         // NOTE: 4 rounds to cover all possible rotations
         for (int i = 0; i < 4; i++)
         {
-            Debug.Log("<color=cyan><b> rotation " + rotation + "</b></color>");
+            Debug.Log("<color=cyan><b> Player last rotation " + lastRotation + "</b></color>");
 
             int equalValuesFound = 0;
             int validCombinations;
@@ -119,8 +127,11 @@ public class RotationSelection : MonoBehaviour {
 
             if (validCombinations != 0)
             {
-                NotMatchingRot.Add(rotation);
-                Debug.Log("<color=red><b> found not matching </b></color>");
+                NotMatchingRot.Add(lastRotation);
+                Debug.Log("<color=red><b> not matching /////////////</b></color>");
+            } else
+            {
+                Debug.Log("<color=green><b> matching ////////////////</b></color>");
             }
 
             // NOTE: Reset of values
@@ -128,11 +139,11 @@ public class RotationSelection : MonoBehaviour {
             validCombinations = 0;
 
             // NOTE: Addition is at the end
-            rotation++;
+            lastRotation++;
             
-            if (rotation > 4)
+            if (lastRotation > 4)
             {
-                rotation = 1;
+                lastRotation = 1;
             }
             
             increasePlayerBeamListValues();
@@ -141,6 +152,7 @@ public class RotationSelection : MonoBehaviour {
         RandomSelectFromAvailable();
     }
 
+    // NOTE: Increases value of all player beams to do next round of check
     void increasePlayerBeamListValues()
     {
         for (int i = 0; i < playerBeams.Count; i++)
@@ -169,7 +181,9 @@ public class RotationSelection : MonoBehaviour {
         if (NotMatchingRot.Count == 0)
         {
             Debug.Log("<color=yellow><b> None notMatching </b></color>");
-            selectedRotation = Random.Range(1, 3);
+
+            // WARNING: Make sure that the range is between 1 / 4
+            selectedRotation = Random.Range(1, 5);
             AdjustingMainframeRotation(selectedRotation);
             Debug.Log("<color=yellow><b> None notMatching - selected </b></color> " + selectedRotation);
         } else
@@ -190,12 +204,12 @@ public class RotationSelection : MonoBehaviour {
         int PlayerRotation = 0;
         int MainframeRotation = 1;
 
-        PlayerRotation = rotation;
-        rotation -= selectedAngle;
-        rotation = Mathf.Abs(rotation);
-        Debug.Log("<color=cyan><b> rotation " + rotation + "</b></color>");
+        PlayerRotation = lastRotation;
+        PlayerRotation -= selectedAngle;
+        PlayerRotation = Mathf.Abs(PlayerRotation);
+        Debug.Log("<color=cyan><b> rotation " + PlayerRotation + "</b></color>");
 
-        MainframeRotation += rotation;
+        MainframeRotation += PlayerRotation;
         Debug.Log("<color=cyan><b> Mainframe rotation " + MainframeRotation + "</b></color>");
 
         SelectedOrientation(MainframeRotation);
@@ -207,34 +221,39 @@ public class RotationSelection : MonoBehaviour {
         switch (finalRotation)
         {
             case 1:
-                // TO DO: spin mainframe 0 degrees
-                CleaningOfSearch();
+                // NOTE: spin mainframe 0 degrees
+                SendSelectedRotation(1);
                 Debug.Log("<color=red><b> 1 Final Selection </b></color>");
                 break;
 
             case 2:
-                // TO DO: spin mainframe 90 degrees
-                CleaningOfSearch();
+                // NOTE: spin mainframe 90 degrees
+                SendSelectedRotation(2);
                 Debug.Log("<color=red><b> 2 Final Selection </b></color>");
                 break;
 
             case 3:
-                // TO DO: spin mainframe 180 degrees
-                CleaningOfSearch();
+                // NOTE: spin mainframe 180 degrees
+                SendSelectedRotation(3);
                 Debug.Log("<color=red><b> 3 Final Selection </b></color>");
                 break;
 
             case 4:
-                // TO DO: spin mainframe 270 degrees
-                CleaningOfSearch();
+                // NOTE: spin mainframe 270 degrees
+                SendSelectedRotation(4);
                 Debug.Log("<color=red><b> 4 Final Selection </b></color>");
                 break;
         }
+
+        CleaningOfSearch();
     }
 
+    // NOTE: Restart of all used values and lists
     void CleaningOfSearch()
     {
-        // TO DO: Reset and celan all values and lists
+        playerBeams.Clear();
+        mainframeBeams.Clear();
+        NotMatchingRot.Clear();
     }
 
     #endregion

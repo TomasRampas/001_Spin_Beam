@@ -9,6 +9,7 @@ public class MainframeScriptYellow : MonoBehaviour {
     public GameObject dummyObject;
     public GameObject playerPart;
     public GameObject playerEmissivepart;
+    public GameObject Mainframe;
 
     public Material RemoveMaterial;
     public Material AddMaterial;
@@ -20,25 +21,32 @@ public class MainframeScriptYellow : MonoBehaviour {
     private GameObject gameManager;
     private ArrayTest arrayTest;
 
+    // NOTE: Values for mainframe spawn rotation
+    private MainframeRotationSelection mainframeRotationSelection;
+
     void Awake()
     {
+        mainframeRotationSelection = gameObject.GetComponent<MainframeRotationSelection>();
         gameManager = GameObject.FindWithTag("GameController");
         arrayTest = gameManager.GetComponent<ArrayTest>();
     }
 
-    void Start() {
-
+    void Start()
+    {
+        
     }
 
     // TO DO: Assign to new array
     public void AddToEnabledArray()
     {
+        mainframeRotationSelection.objectActive = true;
         arrayTest.AddToMainframeListActiveYellow(gameObject);
     }
 
     // TO DO: Assign to new array
     public void AddToDisabledArray()
     {
+        mainframeRotationSelection.objectActive = false;
         arrayTest.AddToMainframeListDisabledYellow(gameObject);
     }
 
@@ -65,6 +73,7 @@ public class MainframeScriptYellow : MonoBehaviour {
     #region GENERAL METHODS
     public void resetMainframePrefab()
     {
+        mainframeRotationSelection.objectActive = false;
         physicalEmissivePartInvisible();
         dummyObjectInvisible();
         emissiveMaterialStates(1);
@@ -74,6 +83,7 @@ public class MainframeScriptYellow : MonoBehaviour {
 
     public void activeMainframePrefab()
     {
+        mainframeRotationSelection.objectActive = true;
         physicalEmissivePartVisible();
         dummyObjectInvisible();
         emissiveMaterialStates(1);
@@ -81,12 +91,14 @@ public class MainframeScriptYellow : MonoBehaviour {
 
     public void deactivatedMainframePrefab()
     {
+        mainframeRotationSelection.objectActive = false;
         physicalEmissivePartInvisible();
         dummyObjectInvisible();
     }
 
     public void removeMainframePrefab()
     {
+        mainframeRotationSelection.objectActive = true;
         physicalEmissivePartVisible();
         dummyObjectVisible();
         emissiveMaterialStates(2);
@@ -95,6 +107,7 @@ public class MainframeScriptYellow : MonoBehaviour {
 
     public void addMainframePrefab()
     {
+        mainframeRotationSelection.objectActive = false;
         physicalEmissivePartVisible();
         emissiveMaterialStates(3);
         playerObjectVisible();
@@ -236,4 +249,5 @@ public class MainframeScriptYellow : MonoBehaviour {
     }
 
     #endregion
+
 }
