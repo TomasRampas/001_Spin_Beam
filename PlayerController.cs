@@ -21,13 +21,13 @@ public class PlayerController : MonoBehaviour {
 		if (Input.GetKeyDown("left"))
         {
             //targetRotation *= Quaternion.AngleAxis(90, Vector3.forward);
-            turnLeft();
+            turnRight();
         }
 
         if (Input.GetKeyDown("right"))
         {
             //targetRotation *= Quaternion.AngleAxis(90, Vector3.back);
-            turnRight();
+            turnLeft();
         }
 
         if (swipeControls.SwipeLeft)
@@ -55,13 +55,13 @@ public class PlayerController : MonoBehaviour {
 
     public void turnLeft()
     {
-        DecreaseRotationValue();
+        IncreaseRotationValue();
         targetRotation *= Quaternion.AngleAxis(90, Vector3.forward);
     }
 
     public void turnRight()
     {
-        IncreaseRotationValue();
+        DecreaseRotationValue();
         targetRotation *= Quaternion.AngleAxis(90, Vector3.back);
     }
 

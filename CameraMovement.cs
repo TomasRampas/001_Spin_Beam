@@ -44,13 +44,13 @@ public class CameraMovement : MonoBehaviour {
         if (ZoomIn == true && fovIncrease < 2f)
         {
             FovZoomIn();
-            Debug.Log("<color=red><b> ZOOM IN " + fovIncrease + "</b></color>");
+            //Debug.Log("<color=red><b> ZOOM IN " + fovIncrease + "</b></color>");
         }
 
         if (ZoomOut == true && fovDecrease < 2f)
         {
             FovZoomOut();
-            Debug.Log("<color=cyan><b> ZOOM OUT " + fovIncrease + "</b></color>");
+            //Debug.Log("<color=cyan><b> ZOOM OUT " + fovIncrease + "</b></color>");
         }
         #endregion
     }

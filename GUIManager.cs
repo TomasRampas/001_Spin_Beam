@@ -141,12 +141,13 @@ public class GUIManager : MonoBehaviour {
         InGameGUI(false);
         topScoreScript.GameOverScoreCheck();
         adManager.UpdateCounter();
-        Invoke("InvokedguiSprite", 1.4f);
+        Invoke("Invoked guiSprite", 1.4f);
     }
 
     void InvokedguiSprite()
     {
         guiSprite.enabled = true;
+        Debug.Log("WTF");
     }
 
     // NOTE: The final trigger of game over state

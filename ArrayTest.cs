@@ -202,7 +202,9 @@ public class ArrayTest : MonoBehaviour {
         MainframeListDeactivation();
         MainframeListDeactivationYellow();
 
+        Debug.Log("<color=yellow><b> ------- BLUE COUNT BEFORE ACTION ------" + mainframeActionSelection.BlueCount + "</b></color>");
         mainframeActionSelection.CallRandomAction();
+        Debug.Log("<color=white><b> ------- BLUE COUNT AFTER ACTION  ------" + mainframeActionSelection.BlueCount + "</b></color>");
         AssignAllBeamsInActiveLists();
 
         rotationSelection.SetMainframeRotation();
@@ -233,7 +235,10 @@ public class ArrayTest : MonoBehaviour {
             MainframeListDeactivation();
             MainframeListDeactivationYellow();
 
+            Debug.Log("<color=yellow><b> ------- BLUE COUNT BEFORE ACTION ------" + mainframeActionSelection.BlueCount + "</b></color>");
             mainframeActionSelection.CallRandomAction();
+            Debug.Log("<color=white><b> ------- BLUE COUNT AFTER ACTION  ------" + mainframeActionSelection.BlueCount + "</b></color>");
+
             AssignAllBeamsInActiveLists();
 
             rotationSelection.SetMainframeRotation();

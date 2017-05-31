@@ -10,9 +10,14 @@ public class PlayerRotationSelection : MonoBehaviour {
     public GameObject Mainframe;
     private RotationSelection rotationSelection;
 
-    void Start()
+    void Awake()
     {
         rotationSelection = Mainframe.GetComponent<RotationSelection>();
+    }
+
+    void Start()
+    {
+        
     }
 
     public void AssignPlayerBeamToSelectionList()

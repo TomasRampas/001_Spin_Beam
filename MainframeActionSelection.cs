@@ -10,6 +10,8 @@ public class MainframeActionSelection : MonoBehaviour
 
     #region DEBUG GUI
 
+    public int BlueCount = 0;
+
     public Text DebugNumberOfLoops;
     public Text DebugProgressionLoopcount;
     public Text DebugRange1;
@@ -166,10 +168,10 @@ public class MainframeActionSelection : MonoBehaviour
     {
         // INFO: Check action selection progression
         UpdateListsLoopNumber(numberOfLoops);
-        Debug.Log("<color=red><b>Number of loops</b></color>" + numberOfLoops);
-        Debug.Log("<color=cyan><b>Progression Loop count </b></color>" + ProgressionLoopCount);
-        Debug.Log("<color=yellow><b>Range1 </b></color>" + Range1);
-        Debug.Log("<color=white><b>Range2 </b></color>" + Range2);
+        //Debug.Log("<color=red><b>Number of loops</b></color>" + numberOfLoops);
+        //Debug.Log("<color=cyan><b>Progression Loop count </b></color>" + ProgressionLoopCount);
+        //Debug.Log("<color=yellow><b>Range1 </b></color>" + Range1);
+        //Debug.Log("<color=white><b>Range2 </b></color>" + Range2);
         
         // INFO: Random selection from available actions
         ActionCombinationsBlue(arrayTest.listActive.Count);
@@ -177,7 +179,7 @@ public class MainframeActionSelection : MonoBehaviour
 
         // INFO: Check of combination rules
         ActionRulesCheck(randomAction, randomActionYellow);
-        Debug.Log("<color=red><b> ------------------- </b></color>");
+        //Debug.Log("<color=red><b> ------------------- </b></color>");
     }
     #endregion
 
@@ -209,30 +211,35 @@ public class MainframeActionSelection : MonoBehaviour
     #region BLUE LISTS
     int ActionCombinationsBlue(int listSize)
     {
+        BlueCount = listSize;
+        Debug.Log("<color=red><b> BlueCount " + listSize + " </b></color>");
+
         //Debug.Log("<color=cyan><b>Blue action combination</b></color>");
         switch (listSize)
         {
             case 1:
                 int[] actionNumber2 = new int[] { 2, 1 };
                 randomAction = actionNumber2[Random.Range(0, Range1)];
-                Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
+                //Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
                 potentialSelectionCaseBlue = randomAction;
-                //Debug.Log("<color=white><b> case 2 </b></color>" + randomAction);
+                Debug.Log("<color=white><b> BLUE SIZE 1 " + randomAction + " </b></color>");
                 break;
 
             case 2:
                 int[] actionNumber3 = new int[] { 2, 0, 1, };
                 randomAction = actionNumber3[Random.Range(0, Range2)];
-                Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
+                //Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
                 potentialSelectionCaseBlue = randomAction;
                 //Debug.Log("<color=white><b> case 3 </b></color>" + randomAction);
+                Debug.Log("<color=white><b> BLUE SIZE 2 " + randomAction + " </b></color>");
                 break;
             case 3:
                 int[] actionNumber4 = new int[] { 0, 2 };
                 randomAction = actionNumber4[Random.Range(0, Range1)];
-                Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
+                //Debug.Log("<color=cyan><b> Potential selection case 2 - </b></color>" + randomAction);
                 potentialSelectionCaseBlue = randomAction;
                 //Debug.Log("<color=white><b> case 4 </b></color>" + randomAction);
+                Debug.Log("<color=white><b> BLUE SIZE 3 " + randomAction + " </b></color>");
                 break;
             default:
                 randomAction = 0;
@@ -284,21 +291,21 @@ public class MainframeActionSelection : MonoBehaviour
             case 1:
                 int[] actionNumber2 = new int[] { 2, 1 };
                 randomActionYellow = actionNumber2[Random.Range(0, Range1)];
-                Debug.Log("<color=yellow><b> Potential selection case 1 - </b></color>" + randomActionYellow);
+                //Debug.Log("<color=yellow><b> Potential selection case 1 - </b></color>" + randomActionYellow);
                 potentialSelectionCaseYellow = randomActionYellow;
                 //Debug.Log("<color=white><b> Range1 </b></color>" + Range1);
                 break;
             case 2:
                 int[] actionNumber3 = new int[] { 2, 0, 1 };
                 randomActionYellow = actionNumber3[Random.Range(0, Range2)];
-                Debug.Log("<color=yellow><b> Potential selection case 2 - </b></color>" + randomActionYellow);
+                //Debug.Log("<color=yellow><b> Potential selection case 2 - </b></color>" + randomActionYellow);
                 potentialSelectionCaseYellow = randomActionYellow;
                 //Debug.Log("<color=white><b> Range2 </b></color>" + Range2);
                 break;
             case 3:
                 int[] actionNumber4 = new int[] { 0, 2 };
                 randomActionYellow = actionNumber4[Random.Range(0, Range1)];
-                Debug.Log("<color=yellow><b> Potential selection case 3 - </b></color>" + randomActionYellow);
+                //Debug.Log("<color=yellow><b> Potential selection case 3 - </b></color>" + randomActionYellow);
                 potentialSelectionCaseYellow = randomActionYellow;
                 //Debug.Log("<color=white><b> case 3 </b></color>" + randomAction);
                 break;
@@ -321,12 +328,13 @@ public class MainframeActionSelection : MonoBehaviour
                 if (!color)
                 {
                     arrayTest.RemoveRandomSelectionFromMainframeActiveYellow();
-                    Debug.Log("<color=yellow><b> Final Remove Yellow </b></color>");
+                    //Debug.Log("<color=yellow><b> Final Remove Yellow </b></color>");
                 }
                 else
                 {
                     arrayTest.RemoveRandomSelectionFromMainframeActive();
-                    Debug.Log("<color=cyan><b> Final Remove Blue </b></color>");
+                    //Debug.Log("<color=cyan><b> Final Remove Blue </b></color>");
+                    Debug.Log("<color=red><b> ------- REMOVING FROM BLUE ACTION ------" + BlueCount + "</b></color>");
                 }
                 break;
 
@@ -334,12 +342,12 @@ public class MainframeActionSelection : MonoBehaviour
                 if (!color)
                 {
                     arrayTest.AddRandomSelectionFromManiframeDisabledYellow();
-                    Debug.Log("<color=yellow><b> Final Add Yellow </b></color>");
+                    //Debug.Log("<color=yellow><b> Final Add Yellow </b></color>");
                 }
                 else
                 {
                     arrayTest.AddRandomSelectionFromManiframeDisabled();
-                    Debug.Log("<color=cyan><b> Final Add Blue </b></color>");
+                    //Debug.Log("<color=cyan><b> Final Add Blue </b></color>");
                 }
                 break;
 
@@ -347,12 +355,12 @@ public class MainframeActionSelection : MonoBehaviour
                 if (!color)
                 {
                     arrayTest.RandomMainframeBeamSelectionYellow();
-                    Debug.Log("<color=yellow><b> Final Random Yellow </b></color>" + randomAction);
+                    //Debug.Log("<color=yellow><b> Final Random Yellow </b></color>" + randomAction);
                 }
                 else
                 {
                     arrayTest.RandomMainframeBeamSelection();
-                    Debug.Log("<color=cyan><b> Final Random Blue </b></color>" + randomAction);
+                    //Debug.Log("<color=cyan><b> Final Random Blue </b></color>" + randomAction);
                 }
                 break;
 
@@ -374,10 +382,10 @@ public class MainframeActionSelection : MonoBehaviour
                 // NOTE: This rule disables combinations of 2x add and 2x remove, and combinations of add and remove (0 + 1, 1 + 0)
                 if (BlueAction + YellowAction < 2 || BlueAction * YellowAction == 1)
                 {
-                    Debug.Log("<color=red><b> Case 1 Reset of Action 1 </b></color>");
-                    ActionCombinationsBlue(arrayTest.listActiveYellow.Count);
+                    //Debug.Log("<color=red><b> Case 1 Reset of Action 1 </b></color>");
+                    ActionCombinationsBlue(arrayTest.listActive.Count);
                     ActionCombinationsYellow(arrayTest.listActiveYellow.Count);
-                    Debug.Log("<color=red><b> Case 1 call new check </b></color>");
+                    //Debug.Log("<color=red><b> Case 1 call new check </b></color>");
                     ActionRulesCheck(randomAction, randomActionYellow);
 
                 }
@@ -393,10 +401,10 @@ public class MainframeActionSelection : MonoBehaviour
                 // NOTE: This rule disables combinations of add and remove (0 + 1, 1 + 0)
                 if (BlueAction * YellowAction == 1 || (BlueAction + YellowAction)*BlueAction == 1)
                 {
-                    Debug.Log("<color=red><b> Case 2 Reset of Action 1 </b></color>");
-                    ActionCombinationsBlue(arrayTest.listActiveYellow.Count);
+                    //Debug.Log("<color=red><b> Case 2 Reset of Action 1 </b></color>");
+                    ActionCombinationsBlue(arrayTest.listActive.Count);
                     ActionCombinationsYellow(arrayTest.listActiveYellow.Count);
-                    Debug.Log("<color=red><b> Case 2 call new check </b></color>");
+                    //Debug.Log("<color=red><b> Case 2 call new check </b></color>");
                     ActionRulesCheck(randomAction, randomActionYellow);
                 }
                 else
@@ -413,10 +421,10 @@ public class MainframeActionSelection : MonoBehaviour
                 // NOTE: This rule disables combinations of add and remove (0 + 1, 1 + 0)
                 if (BlueAction * YellowAction == 1)
                 {
-                    Debug.Log("<color=red><b> Case 2 Reset of Action 1 </b></color>");
-                    ActionCombinationsBlue(arrayTest.listActiveYellow.Count);
+                    //Debug.Log("<color=red><b> Case 2 Reset of Action 1 </b></color>");
+                    ActionCombinationsBlue(arrayTest.listActive.Count);
                     ActionCombinationsYellow(arrayTest.listActiveYellow.Count);
-                    Debug.Log("<color=red><b> Case 2 call new check </b></color>");
+                    //Debug.Log("<color=red><b> Case 2 call new check </b></color>");
                     ActionRulesCheck(randomAction, randomActionYellow);
                 }
                 else
